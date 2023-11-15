@@ -9,11 +9,12 @@ const INACTIVE_ROUTE = "text-gray-600";
 
 function AuthButton() {
     const { data: session } = useSession();
-
+    console.log(session?.user);
     if (session) {
         return (
             <>
                 {session?.user?.name} <br />
+                {session?.user?.email} <br />
                 <button onClick={() => signOut()}>Sign out</button>
             </>
         );
@@ -31,14 +32,14 @@ export default function NavMenu() {
     return (
         <div>
             <AuthButton />
-            <ul>
+            {/* <ul>
                 <Link href="/">
                     <li className={pathname === "/" ? ACTIVE_ROUTE : INACTIVE_ROUTE}>Home</li>
                 </Link>
                 <Link href="/protected">
                     <li className={pathname === "/protected" ? ACTIVE_ROUTE : INACTIVE_ROUTE}>Protected</li>
                 </Link>
-            </ul>
+            </ul> */}
         </div>
     );
 }
