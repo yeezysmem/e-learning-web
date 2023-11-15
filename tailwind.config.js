@@ -20,14 +20,17 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
+        background: "#FAF9F5",
         foreground: "hsl(var(--foreground))",
+        userName: "#DBCFCF",
+        text:"#DBCFCF",
+        sidebarLink: "#FFD188",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#222222",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#8F8F8E",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -54,7 +57,7 @@ module.exports = {
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        sm: "50%",
       },
       keyframes: {
         "accordion-down": {
