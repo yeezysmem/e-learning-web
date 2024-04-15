@@ -1,10 +1,13 @@
 import NextAuth from "next-auth/next";
 import Github from "next-auth/providers/github";
+import EmailProvider from "next-auth/providers/email"
+
 import type { AuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { AdapterUser } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import { DefaultSession } from "next-auth";
+// import { createTransport } from "nodemailer"
 
 declare module 'next-auth' {
   interface Session {
@@ -42,6 +45,8 @@ export const authOptions: AuthOptions = {
         }),
     ],
 };
+
+
 
 export const handler = NextAuth(authOptions);
 

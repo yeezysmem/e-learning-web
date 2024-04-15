@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { isTeacher } from "@/lib/teacher";
 import { useSession, signIn, signOut } from "next-auth/react";
 // import { SearchInput } from "./search-input";
-
 export const NavbarRoutes = () => {
     const pathname = usePathname();
 
@@ -21,12 +20,18 @@ export const NavbarRoutes = () => {
                     search
                 </div>
             )}
+            <Link href="/teacher/courses" className="">
+                <button className="flex items-center justify-center gap-x-2 mt-5 px-4 text-white">
+                    <span>
+                        Teacher mode
+                    </span>
+                </button>
+                </Link>
             <div className="flex gap-x-2 ml-auto">
                 {isTeacherPage || isCoursePage ? (
                     <Link href="/">
-                        <button>
-                            logout
-                            Exit
+                        <button className="text-sm">
+                            LogOut
                         </button>
                     </Link>
                 ) : isTeacher(session?.user?.id) ? (

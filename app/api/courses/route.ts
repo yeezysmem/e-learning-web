@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 
-
 export async function POST(
     req: Request,
 ) {
@@ -16,13 +15,18 @@ export async function POST(
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 })
         }
+        
         const course = await db.course.create({
             data: {
                 userId,
                 title,
-                price:0,
+                price: 0,
+                
             }
-            });
+            }).catch(dbError => {
+                console.error("[COURSES] Database Error:", dbError);
+                throw new Error("Error creating course in the database");
+             });
             return NextResponse.json(course)
 
     } catch (error) {
