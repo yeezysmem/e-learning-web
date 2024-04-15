@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const {withUt} = require("uploadthing/tw");
+
+module.exports = withUt({
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -20,17 +22,21 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#FAF9F5",
+        background: "#F9F9F9",
         foreground: "hsl(var(--foreground))",
         userName: "#DBCFCF",
         text:"#DBCFCF",
         sidebarLink: "#FFD188",
+        sidebarLinkActive: "#FFEED4",
+        sidebarLinkHover:"#905C0A",
+        sidebar: "#222222",
+        editCourseBg: "#EBEBEB",
         primary: {
           DEFAULT: "#222222",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#8F8F8E",
+          DEFAULT: "#585858",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -76,4 +82,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+});
