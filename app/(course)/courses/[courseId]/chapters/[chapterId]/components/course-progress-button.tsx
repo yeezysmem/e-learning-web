@@ -14,7 +14,7 @@ interface CourseProgressButtonProps {
   courseId: string;
   isCompleted?: boolean;
   nextChapterId?: string;
-  grade?: string | null;
+  grade?: number | null;
   explanation?: string | null;
 };
 
