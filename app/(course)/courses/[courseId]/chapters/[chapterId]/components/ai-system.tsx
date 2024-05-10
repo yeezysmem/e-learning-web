@@ -8,6 +8,7 @@ import { CircleDashed } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Chapter } from "@prisma/client";
+import Router from "next/navigation";
 
 interface AssistantFormProps {
   chapterId: string;
@@ -16,16 +17,20 @@ interface AssistantFormProps {
   rightAnswer: string;
   initialData: Chapter;
   grade: string;
-
+  explanation: string;
 }
 
-
-function AssistantForm({ taskCriteria, chapterId,courseId, grade }: AssistantFormProps) {
+function AssistantForm({
+  taskCriteria,
+  chapterId,
+  courseId,
+  grade,
+  explanation,
+}: AssistantFormProps) {
   const [responseText, setResponseText] = useState("");
   const editorRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
 
   const placeholder = `def even_or_odd(number):
 	return 'Odd' if number % 2 else 'Even'`;
@@ -34,12 +39,6 @@ function AssistantForm({ taskCriteria, chapterId,courseId, grade }: AssistantFor
     editorRef.current = editor;
   }
 
- 
-
-
-
- 
-  
   function handleSendMessage() {
     const userCode = editorRef.current.getValue();
     if (userCode.trim() === "") {
@@ -57,29 +56,35 @@ function AssistantForm({ taskCriteria, chapterId,courseId, grade }: AssistantFor
           messages: [
             {
               role: "user",
-              content: `evaluate the provided code ${userCode} without considering any comments, any additional information. Please assign a grade to the code based on the following criteria: ${taskCriteria}. If the code does not meet the specified criteria, assign it a score of 0 points.Its must be int between 0 and 10. Your answer should be Grade: `,
+              content: `evaluate the provided code ${userCode} without considering any comments, any additional information. Please assign a grade to the code based on the following criteria: ${taskCriteria}. If the code does not meet the specified criteria, assign it a score of 0 points.Its must be int between 0 and 10. Your answer should be Grade: and why you gave that grade.`,
             },
           ],
         },
         {
           headers: {
             "Content-Type": "application/json",
-            "X-RapidAPI-Key": "dd2b25a7acmsh5c5bbb65b95332dp1bcce0jsn3892aa2992db",
+            "X-RapidAPI-Key":
+              "dd2b25a7acmsh5c5bbb65b95332dp1bcce0jsn3892aa2992db",
             "X-RapidAPI-Host": "chat-gtp-free.p.rapidapi.com",
           },
-        }
+        },
       )
       .then((response) => {
         setResponseText(response.data.text);
-        const total = response.data.text.split("Grade: ");
-        return axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, { grade: total[1]});
+        const explanation = response.data.text;
+        const gradeMatch = response.data.text.match(/Grade: (\d+)/);
+        const grade = gradeMatch ? parseInt(gradeMatch[1]) : null;  
+        // const totalGrade = parseInt(grade)
+        return axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {
+          grade: grade,
+          explanation: explanation,
+        });
       })
       .then(() => {
-        
         // if (grade > 6) {
         //   toast.success("You have passed the test. Your grade is" + grade );
         // }
-        toast.success("Your grade has been submitted" );
+        toast.success("Your grade has been submitted");
         // router.reload();
       })
       .catch((error) => {
@@ -90,6 +95,8 @@ function AssistantForm({ taskCriteria, chapterId,courseId, grade }: AssistantFor
         setLoading(false);
       });
   }
+  // const totalGrade = parseInt(grade)
+  // console.log(typeof totalGrade)
 
   return (
     <div>
@@ -127,13 +134,18 @@ function AssistantForm({ taskCriteria, chapterId,courseId, grade }: AssistantFor
               responseText
             ) : (
               <span className="text-sm text-orange-500">
-                Upload your solution 
+                Upload your solution
               </span>
             )}
           </p>
         </div>
         <div>
-          <h4>Your previous grade is: <b>{grade ? grade : ""}</b></h4>
+          <h4>
+            Your previous grade is: <b>{grade ? grade : ""}</b>
+          
+            {/* {explanation} */}
+          </h4>
+          <p>Explanation: {explanation}</p>
         </div>
       </div>
     </div>

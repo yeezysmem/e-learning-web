@@ -9,6 +9,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { callbackify } from "util";
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { IconBadge } from "@/components/icon-badge";
 // import { authOptions } from "../../api/auth/";
 
@@ -16,6 +17,11 @@ const Header = () => {
   // const session = await getServerSession(authOptions);
   const { data: session } = useSession();
   const user = session?.user;
+  const router = useRouter();
+  const Register = () => {
+    router.push("/api/auth/signin");
+  }
+
   return (
     <header className="bg-black">
       <div className="container flex justify-center items-center ">
@@ -28,17 +34,18 @@ const Header = () => {
             <Image src={Learnify} width={80} height={80} alt="logo" />) : (
                 <Logo />
             ) }</li> */}
-            <li className="text-white hover:text-green-400 transition-all cursor-pointer ">
-              <Link href="/"> Guide </Link>
-            </li>
+           
             <li className="text-white hover:text-green-400 transition-all cursor-pointer">
-              <Link href="/dashboard"> Dashboard </Link>
+              <Link href="/"> Dashboard </Link>
             </li>
             <li className="text-white hover:text-green-400 transition-all cursor-pointer">
               <Link href="/search"> Search </Link>
             </li>
             <li className="text-white hover:text-green-400 transition-all cursor-pointer">
-              <Link href="/teacher/courses"> PRO </Link>
+              <Link href="/teacher/courses"> Become a teacher </Link>
+            </li>
+            <li className="text-white hover:text-green-400 transition-all cursor-pointer">
+              <Link href="/teacher/analytics"> Analytics </Link>
             </li>
             <li>
               {session ? (
@@ -62,7 +69,7 @@ const Header = () => {
                 </div>
               ) : (
                 <button
-                  onClick={() => signIn("user", { callbackUrl: "/search" })}
+                  onClick={() => signIn()}
                   className="text-sidebarLink text-sm"
                 >
                   Sign in

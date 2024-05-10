@@ -5,9 +5,9 @@ const db = new PrismaClient()
 
 async function main() {
     try {
-        await db.ProgramminLanguage.createMany({
+        await db.categories.createMany({
             data: [
-                {name: "javascript"},
+                {name: "frontend"},
                 {name: "typescript"},
                 {name: "python"},
                 {name: "java"},

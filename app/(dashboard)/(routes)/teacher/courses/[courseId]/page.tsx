@@ -104,13 +104,11 @@ const CourseIdPage = async ({ params }: { params: { courseId: string, types: str
             <div className="flex-1 items-center gap-x-2">
               <ImageForm initialData={course} courseId={course.id} />
               <AttachementForm initialData={course} courseId={course.id} />
+              <ChaptersForm initialData={course} courseId={course.id}  />
+
             </div>
           </div>
         </div>
-      </div>
-      <div className="grid grid-cols-1">
-      <ChaptersForm initialData={course} courseId={course.id}  />
-
       </div>
     </div>
   );

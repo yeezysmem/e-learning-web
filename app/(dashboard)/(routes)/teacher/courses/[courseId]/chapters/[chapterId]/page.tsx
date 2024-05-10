@@ -37,6 +37,15 @@ import { Brain } from "lucide-react";
 import { TaskCodeSnippet } from "./_components/task-snippet";
 import { TaskLanguageForm } from "./_components/task-language";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
 const ChapterIdPage = async ({
   params,
 }: {
@@ -113,6 +122,23 @@ const ChapterIdPage = async ({
 
   return (
     <>
+      {/* <div>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div> */}
       {chapter.chapterType === "Lectures" && (
         <div className="bg-[#E7F1ED]">
           {!chapter.isPublished && (
@@ -131,6 +157,7 @@ const ChapterIdPage = async ({
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to course setup
                 </Link>
+
                 <div className="flex items-center justify-between w-full">
                   <div className="flex flex-col gap-y-2">
                     <h1 className="text-2xl font-medium">
@@ -327,7 +354,10 @@ const ChapterIdPage = async ({
                     <IconBadge icon={Brain} variant="white" />
                     <h2 className="text-xl">Tests</h2>
                   </div>
-                  <SurveyForm />
+                  <SurveyForm
+                    courseId={params.courseId}
+                    chapterId={params.chapterId}
+                  />
                 </div>
               </div>
               <div></div>

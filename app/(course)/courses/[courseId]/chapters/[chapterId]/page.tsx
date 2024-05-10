@@ -14,6 +14,7 @@ import { CourseEnrollButton } from "./components/enroll-button";
 import { CourseProgressButton } from "./components/course-progress-button";
 import AssistantForm from "./components/ai-system";
 import Markdown from "react-markdown";
+import Rating from "./components/rating-form";
 
 const ChapterIdPage = async ({
   params,
@@ -85,6 +86,8 @@ const ChapterIdPage = async ({
                 courseId={params.courseId}
                 nextChapterId={nextChapter?.id}
                 isCompleted={!!userProgress?.isCompleted}
+                grade={userProgress?.grade}
+                explanation={userProgress?.explanation}
               />
             ) : (
               <CourseEnrollButton
@@ -111,7 +114,9 @@ const ChapterIdPage = async ({
                     rightAnswer={chapter.rightAnswer}
                     courseId={params.courseId}
                     grade={chapter.grade}
+                    explanation={chapter.explanation}
                   />
+                  {/* <Rating chapterId={chapter.id} /> */}
                 </div>
               )}
             </div>

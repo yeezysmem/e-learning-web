@@ -13,11 +13,12 @@ const { Video } = new Mux(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { courseId: string; chapterId: string } }
+  { params }: { params: { courseId: string; chapterId: string, grade:string, explanation:string} }
 ) {
   try {
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;
+    const { isPublished, grade, explanation, ...values } = await req.json();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -40,6 +41,7 @@ export async function DELETE(
         courseId: params.courseId,
       }
     });
+
 
     if (!chapter) {
       return new NextResponse("Not Found", { status: 404 });
@@ -95,12 +97,12 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { courseId: string; chapterId: string } }
+  { params }: { params: { courseId: string; chapterId: string, grade: string, explanation:string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;
-    const { isPublished, ...values } = await req.json();
+    const { isPublished, grade, explanation, ...values } = await req.json();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -125,6 +127,20 @@ export async function PATCH(
       data: {
         ...values,
       }
+    });
+
+
+    await db.userProgress.update({
+      where: {
+        userId_chapterId: {
+          userId: userId,
+          chapterId: params.chapterId,
+        },
+      },
+      data: {
+        grade: grade, // Update grade
+        explanation: explanation, // Update explanation
+      },
     });
 
     if (values.videoUrl) {

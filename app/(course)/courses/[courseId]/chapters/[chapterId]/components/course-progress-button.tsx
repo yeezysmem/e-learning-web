@@ -14,13 +14,17 @@ interface CourseProgressButtonProps {
   courseId: string;
   isCompleted?: boolean;
   nextChapterId?: string;
+  grade?: string | null;
+  explanation?: string | null;
 };
 
 export const CourseProgressButton = ({
   chapterId,
   courseId,
   isCompleted,
-  nextChapterId
+  nextChapterId,
+  grade,
+  explanation,
 }: CourseProgressButtonProps) => {
   const router = useRouter();
   const confetti = useConfetti();
@@ -31,7 +35,11 @@ export const CourseProgressButton = ({
       setIsLoading(true);
 
       await axios.put(`/api/courses/${courseId}/chapters/${chapterId}/progress`, {
-        isCompleted: !isCompleted
+        courseId: courseId, // Include courseId in the request body
+        chapterId: chapterId,
+        isCompleted: !isCompleted,
+        grade: grade,
+        explanation: explanation,
       });
 
       if (!isCompleted && !nextChapterId) {

@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 
+// Assuming this is the backend logic for updating chapter progress
 export async function PUT(
   req: Request,
   { params }: { params: { courseId: string; chapterId: string } }
@@ -14,7 +15,7 @@ export async function PUT(
   try {
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;
-    const { isCompleted } = await req.json();
+    const { courseId, chapterId, isCompleted, grade, explanation } = await req.json();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -24,16 +25,21 @@ export async function PUT(
       where: {
         userId_chapterId: {
           userId,
-          chapterId: params.chapterId,
+          chapterId: chapterId,
         }
       },
       update: {
-        isCompleted
+        isCompleted,
+        grade,
+        explanation,
       },
       create: {
         userId,
-        chapterId: params.chapterId,
+        chapterId,
+        courseId, // Include courseId when creating new entry
         isCompleted,
+        grade,
+        explanation,
       }
     })
 

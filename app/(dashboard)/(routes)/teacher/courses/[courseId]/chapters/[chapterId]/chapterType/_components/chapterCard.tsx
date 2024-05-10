@@ -71,9 +71,9 @@ ChapterCardProps) => {
     try {
       await axios.patch(
         `/api/courses/${courseId}/chapters/${chapterId}/chapterType`,
-        { chapterType: "Surveys" }
+        { chapterType: "Supplementary resources" }
       );
-      toast.success("Surveys selected");
+      toast.success("Supplementary resources selected");
       router.refresh();
       router.push(`/teacher/courses/${courseId}/chapters/${chapterId}`);
       
@@ -83,14 +83,14 @@ ChapterCardProps) => {
   };
 
   return (
-    <div className="grid gap-6">
+    <div className="flex gap-6">
       {/* <Link
         href={`/teacher/courses/${courseId}/chapters/${chapterId}`}
         onClick={onFinalExam}
       > */}
         <div className="bg-[#E1E0FC] rounded-md cursor-pointer" onClick={onFinalExam}>
-          <div className="flex items-center justify-center pl-6 pt-6 pr-6 ">
-            <Image src={typeone} width={250} height={250} alt="asdasd" />
+          <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
+            <Image src={typeone} width={270} height={250}  alt="FinalExam" />
           </div>
           <div className="bg-[#C7C8FA] p-4 rounded-b-md">
             <h1 className="text-lg font-semibold">Final exam</h1>
@@ -105,11 +105,11 @@ ChapterCardProps) => {
         onClick={onResources}
       > */}
         <div className="bg-[#E7F1ED] rounded-md cursor-pointer"  onClick={onResources}>
-          <div className="flex items-center justify-center pl-6 pt-6 pr-6 ">
-            <Image src={typetwo} width={250} height={250} alt="asdasd" />
+          <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
+            <Image src={typetwo} width={253} height={250} alt="asdasd" />
           </div>
           <div className="bg-[#CBE1D9] p-4 rounded-b-md">
-            <h1 className="text-lg font-semibold">Lectures & Resources</h1>
+            <h1 className="text-lg font-semibold">Lectures & Materials</h1>
             <p className="text-[#484848]">
               Please add your content here. Keep it short and simple. And smile
               :)
@@ -122,11 +122,11 @@ ChapterCardProps) => {
         onClick={onSurveys}
       > */}
         <div className="bg-[#F5D3D3] rounded-md cursor-pointer" onClick={onSurveys}>
-          <div className="flex items-center justify-center pl-6 pt-6 pr-6 ">
-            <Image src={typethree} width={275} height={275} alt="asdasd" />
+          <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
+            <Image src={typethree} width={300}  alt="asdasd" />
           </div>
           <div className="bg-[#FEB8B8] p-4 rounded-b-md">
-            <h1 className="text-lg font-semibold">Surveys</h1>
+            <h1 className="text-lg font-semibold">Supplementary resources</h1>
             <p className="text-[#484848]">
               Please add your content here. Keep it short and simple. And smile
               :)

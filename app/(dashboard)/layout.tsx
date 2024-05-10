@@ -9,7 +9,7 @@ export default async function DashboardLayout({
   return (
     <div className="h-full ">
       <Header />
-      
+
       <main className="h-full">{children}</main>
     </div>
   );

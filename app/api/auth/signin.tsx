@@ -4,22 +4,24 @@ import type {
   } from "next"
   import { getProviders, signIn } from "next-auth/react"
   import { getServerSession } from "next-auth/next"
-  import { authOptions } from "./route"
+  import { authOptions } from "./[...nextauth]/route"
   
   export default function SignIn({
     providers,
   }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     return (
-      <>
-        {Object.values(providers).map((provider) => (
+      <div>
+        <div>
+          <h1>Sign In</h1>
+        </div>
+        {/* {Object.values(providers).map((provider) => (
           <div key={provider.name}>
             <button onClick={() => signIn(provider.id)}>
               Sign in with {provider.name} 
             </button>
-            <h1 className="text-white">SUKAAAA</h1>
           </div>
-        ))}
-      </>
+        ))} */}
+      </div>
     )
   }
   
@@ -30,7 +32,7 @@ import type {
     // Note: Make sure not to redirect to the same page
     // To avoid an infinite loop!
     if (session) {
-      return { redirect: { destination: "/" } }
+      return { redirect: { destination: "/search" } }
     }
   
     const providers = await getProviders()
