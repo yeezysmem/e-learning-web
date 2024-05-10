@@ -97,7 +97,7 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { courseId: string; chapterId: string, grade: string, explanation:string } }
+  { params }: { params: { courseId: string; chapterId: string, grade: number, explanation:string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
