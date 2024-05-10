@@ -113,8 +113,8 @@ const ChapterIdPage = async ({
                     taskCriteria={chapter.taskCriteria}
                     rightAnswer={chapter.rightAnswer}
                     courseId={params.courseId}
-                    grade={chapter.grade}
-                    explanation={chapter.explanation}
+                    grade={userProgress?.grade}
+                    explanation={userProgress?.explanation}
                   />
                   {/* <Rating chapterId={chapter.id} /> */}
                 </div>
