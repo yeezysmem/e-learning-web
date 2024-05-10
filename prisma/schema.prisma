@@ -9,29 +9,51 @@ generator client {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  email        String?     @unique
-  name     String?
-  passwordHash String?    // Store hashed passwords securely
-  emailVerified Boolean   @default(false) // Track whether the email is verified
-  verificationToken String? @unique   // Store verification tokens for email verification
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  image       String?
-  role       String?     
-  coursesCreated Course[]   @relation
-//   coursesCreated Course[]  @relation
-
-
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
+ 
 model Session {
-  id        String  @id @db.Uuid 
-  sid       String  @unique
-  data      String  @db.String(2048)
-  expiresAt DateTime
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([provider, providerAccountId])
+}
 
 model verificationToken {
     id           String     @id @default(uuid())
@@ -43,6 +65,21 @@ model verificationToken {
     
     @@unique([identifier, token])
     
+}
+
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([userId, credentialID])
 }
 
 
@@ -85,7 +122,7 @@ model Course {
     typeId      String?
     rating      Float?
     authorId   String?
-    author     User? @relation(fields: [authorId], references: [id])
+    // author     User? @relation(fields: [authorId], references: [id])
 
     // author     User? @relation(fields: [authorId], references: [id])
 
