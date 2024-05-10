@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import toast, { Toaster } from 'solid-toast';
+import toast from 'solid-toast';
 import { TypeForm } from "../courses/[courseId]/_components/type-form";
 
 import {
