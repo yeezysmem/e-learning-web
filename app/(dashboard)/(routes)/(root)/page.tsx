@@ -12,7 +12,7 @@ export default async function Dashboard() {
   const userId = session?.user?.id;
 
   if (!userId) {
-    return redirect("/");
+    return redirect("/api/auth/signin");
   }
 
   const {
