@@ -3,14 +3,27 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function POST(
     req: Request,
 ) {
     try {
         const session = await getServerSession(authOptions)
-        const { title } = await req.json()
-        const userId = session?.user?.id
+        const { title, } = await req.json()
+
+        const userId = session?.user?.id;
+        
+        const user = await prisma.user.findUnique({
+            where: {
+              id: userId,
+           
+            },
+          });
+        // const userId = session?.user?.id
+        // console.log(userId);
 
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 })
@@ -18,7 +31,7 @@ export async function POST(
         
         const course = await db.course.create({
             data: {
-                userId,
+                userId: user.id,
                 title,
                 price: 0,
                 
