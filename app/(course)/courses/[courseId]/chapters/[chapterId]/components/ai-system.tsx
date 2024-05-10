@@ -9,6 +9,8 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Chapter } from "@prisma/client";
 import Router from "next/navigation";
+import { OpenAI } from "openai";
+
 
 interface AssistantFormProps {
   chapterId: string;
@@ -16,7 +18,7 @@ interface AssistantFormProps {
   taskCriteria: string;
   rightAnswer: string;
   initialData: Chapter;
-  grade: string;
+  grade: number;
   explanation: string;
 }
 
@@ -39,61 +41,53 @@ function AssistantForm({
     editorRef.current = editor;
   }
 
-  function handleSendMessage() {
-    const userCode = editorRef.current.getValue();
-    if (userCode.trim() === "") {
-      console.log("The userCode is empty");
-      return;
-    }
+  async function handleSendMessage() {
+    try {
+      setLoading(true);
 
-    setLoading(true);
+      const userCode = editorRef.current.getValue();
 
-    axios
-      .post(
-        "https://chat-gtp-free.p.rapidapi.com/v1/chat/completions",
-        {
-          chatId: "92d97036-3e25-442b-9a25-096ab45b0525",
-          messages: [
-            {
-              role: "user",
-              content: `evaluate the provided code ${userCode} without considering any comments, any additional information. Please assign a grade to the code based on the following criteria: ${taskCriteria}. If the code does not meet the specified criteria, assign it a score of 0 points.Its must be int between 0 and 10. Your answer should be Grade: and why you gave that grade.`,
-            },
-          ],
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-RapidAPI-Key":
-              "dd2b25a7acmsh5c5bbb65b95332dp1bcce0jsn3892aa2992db",
-            "X-RapidAPI-Host": "chat-gtp-free.p.rapidapi.com",
-          },
-        },
-      )
-      .then((response) => {
-        setResponseText(response.data.text);
-        const explanation = response.data.text;
-        const gradeMatch = response.data.text.match(/Grade: (\d+)/);
-        const grade = gradeMatch ? parseInt(gradeMatch[1]) : null;  
-        // const totalGrade = parseInt(grade)
-        return axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {
-          grade: grade,
-          explanation: explanation,
-        });
-      })
-      .then(() => {
-        // if (grade > 6) {
-        //   toast.success("You have passed the test. Your grade is" + grade );
-        // }
-        toast.success("Your grade has been submitted");
-        // router.reload();
-      })
-      .catch((error) => {
-        console.error("Error sending userCode:", error);
-        toast.error("Something went wrong");
-      })
-      .finally(() => {
-        setLoading(false);
+      const openai = new OpenAI({
+        apiKey: "pk-ZEdsByaTwSOuLxLdcBZnxVglrGdQEiCKTUosWRHULGYsUCwJ",
+        baseURL: "https://api.pawan.krd/gpt-3.5-unfiltered/v1",
+        dangerouslyAllowBrowser: true,
       });
+
+      const chatCompletion = await openai.chat.completions.create({
+        messages: [{ role: 'user', content: `evaluate the provided code ${userCode} without considering any comments, any additional information. Please assign a grade to the code based on the following criteria: ${taskCriteria}. If the code does not meet the specified criteria, assign it a score of 0 points.Its must be int between 0 and 10. Your answer should be Grade: and why you gave that grade.` }],
+        model: 'gpt-3.5-turbo',
+      });
+
+      const response = chatCompletion.choices[0].message.content;
+      setResponseText(response);
+      console.log(response);
+
+      // const response = await axios.request(options);
+      // const res = response.data.map((item) => item.message.content);
+
+      // setResponseText(response.data.text);
+      const explanation = response;
+      const grade = response;
+      const gradeMatch = response.match(/Grade: (\d+)/);
+      console.log(grade);
+
+      const intGrade = gradeMatch ? parseInt(gradeMatch[1]) : null;
+      console.log( typeof intGrade);//response.data.choises[0].message.content
+
+
+      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {
+        grade: intGrade,
+        explanation: response,
+      });
+
+      toast.success("Your grade has been submitted");
+      // router.reload();
+    } catch (error) {
+      console.error("Error sending userCode:", error);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   }
   // const totalGrade = parseInt(grade)
   // console.log(typeof totalGrade)
@@ -141,7 +135,7 @@ function AssistantForm({
         </div>
         <div>
           <h4>
-            Your previous grade is: <b>{grade ? grade : ""}</b>
+            Your grade is: <b>{grade ? grade : ""}</b>
           
             {/* {explanation} */}
           </h4>
