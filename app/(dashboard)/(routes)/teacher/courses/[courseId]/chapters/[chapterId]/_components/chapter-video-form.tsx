@@ -35,6 +35,7 @@ export const ChapterVideoForm = ({
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const router = useRouter();
+  console.log(initialData);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -43,7 +44,7 @@ export const ChapterVideoForm = ({
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   }
 
@@ -77,7 +78,7 @@ export const ChapterVideoForm = ({
         ) : (
           <div className="relative aspect-video mt-2">
             <MuxPlayer
-              playbackId={initialData?.muxData?.playbackId || ""}
+              playbackId={initialData?.muxData?.playbackId || "N34KJa4XH7vl6erxTiFTLOaX4LPcxFFo7W6Diphzlsc"}
             />
           </div>
         )

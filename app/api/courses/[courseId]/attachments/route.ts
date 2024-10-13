@@ -7,7 +7,6 @@ export async function POST(
     {params}: {params: {courseId: string}}
 ) {
     try {
-        // const {userId} = await handleAuth();≈
         const session = await getServerSession(authOptions);
         const userId = session?.user?.id;
         const {url} = await req.json();

@@ -1,6 +1,6 @@
 "use client";
 
-import { Layout, Compass, List, BarChart } from "lucide-react";
+import { Layout, Compass, List, BarChart, Settings } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 import { usePathname } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -14,8 +14,13 @@ const guestRoutes = [
   },
   {
     icon: Compass,
-    label: "Browse",
+    label: "Search",
     href: "/search",
+  },
+  {
+    icon: Settings,
+    label: "Settings",
+    href: "/settings",
   },
 ];
 
@@ -40,26 +45,15 @@ export const SidebarRoutes = () => {
 
   const routes = isTeacherPage ? teacherRoutes : guestRoutes;
   return (
-    <div className="bg-primary">
+    <div>
       {session ? (
         <div>
-          <div className="flex justify-center">
-            <Image
-              src={session?.user?.image}
-              alt="Picture of the author"
-              width={90}
-              height={90}
-              className="rounded-sm"
-            />
-          </div>
-          <div className="flex justify-center">
-            <p className="text-text mt-3 text-xs">{session?.user?.name}</p>
-          </div>
-          <div className="flex justify-center text-sm font-[300] ">
+          
+          {/* <div className="flex justify-center text-sm font-[300] ">
             <button onClick={() => signOut()} className="text-sidebarLink">
               Sign out
             </button>
-          </div>
+          </div> */}
         </div>
       ) : (
         <div className="flex justify-center">
@@ -69,6 +63,7 @@ export const SidebarRoutes = () => {
         </div>
       )}
 
+      <div className="mt-16">
       {routes.map((route) => (
         <SidebarItem
           key={route.href}
@@ -77,6 +72,7 @@ export const SidebarRoutes = () => {
           href={route.href}
         />
       ))}
+      </div>
     </div>
   );
 };

@@ -6,8 +6,6 @@ import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-
-// Assuming this is the backend logic for updating chapter progress
 export async function PUT(
   req: Request,
   { params }: { params: { courseId: string; chapterId: string } }
@@ -36,7 +34,7 @@ export async function PUT(
       create: {
         userId,
         chapterId,
-        courseId, // Include courseId when creating new entry
+        courseId, 
         isCompleted,
         grade,
         explanation,
@@ -49,3 +47,4 @@ export async function PUT(
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+

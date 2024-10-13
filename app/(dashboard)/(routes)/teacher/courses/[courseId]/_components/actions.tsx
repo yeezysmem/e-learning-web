@@ -15,12 +15,14 @@ interface ActionsProps {
   disabled: boolean;
   courseId: string;
   isPublished: boolean;
+  userData: string;
 };
 
 export const Actions = ({
   disabled,
   courseId,
-  isPublished
+  isPublished,
+  userData,
 }: ActionsProps) => {
   const router = useRouter();
   const confetti = useConfetti();

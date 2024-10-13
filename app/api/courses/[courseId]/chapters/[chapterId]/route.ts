@@ -169,7 +169,7 @@ export async function PATCH(
         data: {
           chapterId: params.chapterId,
           assetId: asset.id,
-          playbackId: asset.playback_ids?.[0]?.id,
+          playbackId: asset.playback_ids?.[0]?.id || "q02iNLAkeqmj00pXRlhdRYg2vjtv34ERo01pVyXkvfgd6k",
         }
       });
     }

@@ -75,18 +75,18 @@ export const ChaptersList = ({
                 {(provided) => (
                   <div
                     className={cn(
-                      "mb-4 flex items-center gap-x-2 rounded-md border border-slate-200 bg-black text-sm text-white",
+                      "mb-4 flex items-center gap-x-2 rounded-md border border-slate-200 bg-gray-200 text-sm text-gray-600",
                       chapter.isPublished &&
-                        "border-sky-200 bg-sky-100 text-sky-700",
+                        "border-green-200 bg-green-100 text-green-800",
                     )}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                   >
                     <div
                       className={cn(
-                        "rounded-l-md border-r border-r-slate-200 px-2 py-3 transition hover:opacity-75",
+                        "rounded-l-md border-r border-r-gray-300 px-2 py-3 transition hover:opacity-75",
                         chapter.isPublished &&
-                          "border-r-sky-200 hover:bg-sky-200",
+                          "border-r-green-200 hover:bg-green-300",
                       )}
                       {...provided.dragHandleProps}
                     >
@@ -97,8 +97,8 @@ export const ChaptersList = ({
                       {chapter.isFree && <Badge>Free</Badge>}
                       <Badge
                         className={cn(
-                          "bg-[#BFB8DC] text-slate-950 transition hover:bg-white",
-                          chapter.isPublished && "bg-[#CBE1D9] text-slate-950",
+                          "bg-gray-400 text-slate-950 transition hover:bg-white",
+                          chapter.isPublished && "bg-green-300 text-slate-950",
                         )}
                       >
                         {chapter.isPublished ? "Published" : "Draft"}
@@ -107,7 +107,7 @@ export const ChaptersList = ({
                       {chapter.chapterType ? (
                         <Badge
                           className={cn(
-                            "bg-[#F1CF56] text-slate-950 transition hover:bg-white",
+                            "bg-purple-400 text-slate-950 transition hover:bg-white",
                           )}
                         >
                           {chapter.chapterType}

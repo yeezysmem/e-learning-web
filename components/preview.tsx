@@ -16,7 +16,7 @@ export const Preview = ({
 
   return (
     <ReactQuill
-      className="pl-4"
+      className="pl-4 text-md"
       theme="bubble"
       value={value}
       readOnly

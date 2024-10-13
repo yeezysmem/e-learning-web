@@ -36,7 +36,7 @@ import { TaskAnswerForm } from "./_components/task-answer";
 import { Brain } from "lucide-react";
 import { TaskCodeSnippet } from "./_components/task-snippet";
 import { TaskLanguageForm } from "./_components/task-language";
-
+import { CategoryForm } from "../../_components/category-form";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,6 +45,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { ReverseCombobox } from "@/components/ui/reverseCombobox";
+
+import { ProgrammingLanguagesForm } from "./_components/languages";
 
 const ChapterIdPage = async ({
   params,
@@ -93,14 +96,12 @@ const ChapterIdPage = async ({
     },
   });
 
-  const survey = await db.question.findMany({
-    where: {
-      chapterId: params.chapterId,
-    },
+  const programmingLanguages = await db.programminLanguage.findMany({
     orderBy: {
-      createdAt: "asc",
+      name: "asc",
     },
   });
+
 
   const programmingLanguage = chapter?.programmingLanguageId;
 
@@ -122,25 +123,8 @@ const ChapterIdPage = async ({
 
   return (
     <>
-      {/* <div>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div> */}
       {chapter.chapterType === "Lectures" && (
-        <div className="bg-[#E7F1ED]">
+        <div className="bg-gray-100 h-[100vh] border rounded-md m-1.5">
           {!chapter.isPublished && (
             <Banner
               variant="warning"
@@ -148,17 +132,16 @@ const ChapterIdPage = async ({
             />
           )}
           <div className="p-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between ">
               <div className="w-full">
                 <Link
                   href={`/teacher/courses/${params.courseId}`}
-                  className="flex items-center text-sm hover:opacity-75 transition mb-6"
+                  className="flex items-center text-xs hover:opacity-75 transition mb-6 text-black"
                 >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  <ArrowLeft className="h-3 w-3 mr-1" />
                   Back to course setup
                 </Link>
-
-                <div className="flex items-center justify-between w-full">
+                <div className="flex items-center justify-between w-full border-b pb-3">
                   <div className="flex flex-col gap-y-2">
                     <h1 className="text-2xl font-medium">
                       Lectures & Resources Setup
@@ -176,11 +159,11 @@ const ChapterIdPage = async ({
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mt-16">
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center gap-x-2">
-                    <IconBadge icon={CaseSensitive} variant="white" />
+                    <IconBadge icon={CaseSensitive} variant="purple" />
                     <h2 className="text-xl">Customize your chapter</h2>
                   </div>
                   <ChapterTitleForm
@@ -194,49 +177,41 @@ const ChapterIdPage = async ({
                     chapterId={params.chapterId}
                   />
                 </div>
-                <div>
-                  <div className="flex items-center gap-x-2">
-                    <IconBadge icon={Clapperboard} variant="white" />
-                    <h2 className="text-xl">Video</h2>
-                  </div>
-                  <ChapterVideoForm
-                    initialData={chapter}
-                    courseId={params.courseId}
-                    chapterId={params.chapterId}
-                  />
-                </div>
-                <div className="flex items-center gap-x-2">
-                  <IconBadge icon={Paperclip} variant="white" />
-                  <h2 className="text-xl">Resourses</h2>
-                </div>
-                {/* <AttachementForm initialData={course} courseId={course.id}  chapterId={params.chapterId}/> */}
               </div>
-              <div>{/* <SurveyForm /> */}</div>
+              <div>
+                <div className="flex items-center gap-x-2">
+                  <IconBadge icon={Clapperboard} variant="white" />
+                  <h2 className="text-xl">Video</h2>
+                </div>
+                <ChapterVideoForm
+                  initialData={chapter}
+                  courseId={params.courseId}
+                  chapterId={params.chapterId}
+                />
+              </div>
             </div>
           </div>
         </div>
       )}
       {chapter.chapterType === "Exam" && (
-        <div className="bg-[#EEEEFF]">
-          {!chapter.isPublished && <Banner variant="warning" label="Exam" />}
-          <div className="p-6">
-            <div className="flex items-center justify-between">
+        <div className="bg-gray-100 h-[100hv] border m-1.5 rounded-md mb-12">
+          {!chapter.isPublished && <Banner variant="warning" label="This chapter isn't published." />}
+          <div>
+            <span className="bg-black text-white flex rounded-t-md px-4 text-xs p-1">Course creation: chapter</span>
+            <div className="p-6">
+            <div className="flex items-center justify-between border-b pb-3">
               <div className="w-full">
                 <Link
                   href={`/teacher/courses/${params.courseId}`}
-                  className="flex items-center text-sm hover:opacity-75 transition mb-6"
+                  className="flex items-center text-xs hover:opacity-75 transition mb-6 text-black"
                 >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  <ArrowLeft className="h-3 w-3 mr-1" />
                   Back to course setup
                 </Link>
-                <Link
-                  href={`/teacher/courses/${params.courseId}/chapters/${params.chapterId}/chapterType`}
-                >
-                  To Types
-                </Link>
+                
                 <div className="flex items-center justify-between w-full">
                   <div className="flex flex-col gap-y-2">
-                    <h1 className="text-2xl font-medium">Exam Setup</h1>
+                    <h1 className="text-2xl font-medium">Practical task Setup</h1>
                     <span className="text-sm text-slate-700">
                       Complete all fields {completionText}
                     </span>
@@ -250,12 +225,118 @@ const ChapterIdPage = async ({
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mt-16">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mt-4">
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center gap-x-2">
                     <IconBadge icon={CaseSensitive} variant="white" />
-                    <h2 className="text-xl">Exam setup</h2>
+                    <h2 className="text-xl font-semibold">Main information</h2>
+                  </div>
+                  <ChapterTitleForm
+                    initialData={chapter}
+                    courseId={params.courseId}
+                    chapterId={params.chapterId}
+                  />
+                  <ChapterDescriptionForm
+                    initialData={chapter}
+                    courseId={params.courseId}
+                    chapterId={params.chapterId}
+                  />
+                </div>
+                <div className="flex items-center gap-x-2">
+                  <IconBadge icon={Code} variant="white" />
+                  <h2 className="text-xl font-semibold">Assignment</h2>
+                </div>
+                <ProgrammingLanguagesForm
+                  initialData={chapter}
+                  courseId={params.courseId}
+                  chapterId={params.chapterId}
+                  options={programmingLanguages.map((language) => ({
+                    value: language.name,
+                    label: language.id,
+                  }))}
+                />
+                <TaskCriteriaForm
+                  initialData={chapter}
+                  courseId={params.courseId}
+                  chapterId={params.chapterId}
+                />
+                <TaskAnswerForm
+                  initialData={chapter}
+                  courseId={params.courseId}
+                  chapterId={params.chapterId}
+                />
+                <TaskDescription
+                  initialData={chapter}
+                  courseId={params.courseId}
+                  chapterId={params.chapterId}
+                />
+              </div>
+              <div>
+                <div className="flex items-center gap-x-2">
+                  <IconBadge icon={Code} variant="white" />
+                  <h2 className="text-xl font-semibold">Assignment</h2>
+                </div>
+
+                <TaskImage
+                  initialData={chapter}
+                  courseId={params.courseId}
+                  chapterId={params.chapterId}
+                />
+                <TaskCodeSnippet
+                  initialData={chapter}
+                  courseId={params.courseId}
+                  chapterId={params.chapterId}
+                  defaultLanguage={chapter.programmingLanguageId}
+                />
+                {/* <TaskLanguageForm
+                  initialData={chapter}
+                  courseId={params.courseId}
+                  chapterId={params.chapterId}
+                /> */}
+              </div>
+            </div>
+            {/* <div className="grid grid-cols-1"> */}
+
+            </div>
+          </div>
+        </div>
+      )}
+      {chapter.chapterType === "Challenges" && (
+        <div className="bg-white">
+          {!chapter.isPublished && <Banner variant="warning" label="Exam" />}
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="w-full">
+                <Link
+                  href={`/teacher/courses/${params.courseId}`}
+                  className="flex items-center text-sm hover:opacity-75 transition mb-6"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to course setup
+                </Link>
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex flex-col gap-y-2">
+                    <h1 className="text-2xl font-medium">Challenges Setup</h1>
+                    <span className="text-sm text-slate-700">
+                      Complete all fields {completionText}
+                    </span>
+                  </div>
+                  <ChapterActions
+                    disabled={!isComplete}
+                    courseId={params.courseId}
+                    chapterId={params.chapterId}
+                    isPublished={chapter.isPublished}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-6 ">
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center gap-x-2">
+                    <IconBadge icon={CaseSensitive} variant="white" />
+                    <h2 className="text-xl">Practical task setup</h2>
                   </div>
                   <ChapterTitleForm
                     initialData={chapter}
@@ -278,7 +359,7 @@ const ChapterIdPage = async ({
                   courseId={params.courseId}
                   chapterId={params.chapterId}
                 />
-                <TaskAnswerForm
+                <TaskDescription
                   initialData={chapter}
                   courseId={params.courseId}
                   chapterId={params.chapterId}
@@ -289,11 +370,7 @@ const ChapterIdPage = async ({
                   <IconBadge icon={Code} variant="white" />
                   <h2 className="text-xl">Assignment</h2>
                 </div>
-                <TaskDescription
-                  initialData={chapter}
-                  courseId={params.courseId}
-                  chapterId={params.chapterId}
-                />
+
                 <TaskImage initialData={chapter} courseId={params.courseId} />
                 {/* <TaskLanguageForm
                   initialData={chapter}
@@ -302,19 +379,11 @@ const ChapterIdPage = async ({
                 /> */}
               </div>
             </div>
-            <div className="grid grid-cols-1">
-              <TaskCodeSnippet
-                initialData={chapter}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
-                defaultLanguage="javascript"
-              />
-            </div>
           </div>
         </div>
       )}
-      {chapter.chapterType === "Surveys" && (
-        <div className="bg-[#F5D3D3]">
+      {chapter.chapterType === "Resources" && (
+        <div className="bg-white">
           {!chapter.isPublished && (
             <Banner
               variant="warning"
@@ -347,22 +416,8 @@ const ChapterIdPage = async ({
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-center gap-x-2">
-                    <IconBadge icon={Brain} variant="white" />
-                    <h2 className="text-xl">Tests</h2>
-                  </div>
-                  <SurveyForm
-                    courseId={params.courseId}
-                    chapterId={params.chapterId}
-                  />
-                </div>
-              </div>
-              <div></div>
-            </div>
           </div>
+          
         </div>
       )}
     </>

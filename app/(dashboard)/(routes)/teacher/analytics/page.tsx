@@ -13,10 +13,10 @@ const AnalyticsPage = async () => {
   }
   const { data, totalRevenue, totalSales } = await getAnalytics(userId);
   return (
-    <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <div className="container h-[100vh] bg-gray-100 border m-1.5 rounded-md">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5 mb-1.5 mt-8">
         <DataCard label="Total Sales" value={totalSales} />
-        <DataCard label="Total Revenue" value={totalRevenue} />
+        <DataCard label="Total Revenue" value={totalRevenue} shouldFortmat={true} />
       </div>
       <Chart data={data}></Chart>
     </div>

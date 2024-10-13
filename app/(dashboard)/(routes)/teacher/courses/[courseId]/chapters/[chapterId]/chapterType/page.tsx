@@ -1,4 +1,3 @@
-
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -29,7 +28,6 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
 
-
 interface ChapterTypeProps {
   params: {
     courseId: string;
@@ -40,12 +38,12 @@ interface ChapterTypeProps {
       name: string;
       description: string;
     };
-  }
+  };
 }
 const formSchema = z.object({
   price: z.coerce.number().min(30, {
     message: "Price is required",
-  })
+  }),
 });
 
 const ChapterType = async ({
@@ -60,12 +58,15 @@ const ChapterType = async ({
     return redirect("/");
   }
 
-
-
   return (
-    <div className="container">
-      <h1 className="text-xl font-bold">Choose Chapter Type</h1>
-      <ChapterCard courseId={params.courseId} chapterId={params.chapterId} />
+    <div className="h-[100vh] m-1.5 rounded-md border bg-gray-100">
+      <span className="bg-black text-white flex rounded-t-md px-4 text-xs p-1">
+        Course creation: choose chapter type
+      </span>
+      <div className="container">
+        <h1 className="text-xl font-bold mt-10">Choose Chapter Type</h1>
+        <ChapterCard courseId={params.courseId} chapterId={params.chapterId} />
+      </div>
     </div>
   );
 };

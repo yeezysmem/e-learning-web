@@ -30,6 +30,8 @@ export const CourseProgressButton = ({
   const confetti = useConfetti();
   const [isLoading, setIsLoading] = useState(false);
 
+  
+
   const onClick = async () => {
     try {
       setIsLoading(true);
@@ -70,7 +72,10 @@ export const CourseProgressButton = ({
       className="w-full md:w-auto"
     >
       {isCompleted ? "Not completed" : "Mark as complete"}
+    
       <Icon className="h-4 w-4 ml-2" />
     </Button>
   )
 }
+
+ 

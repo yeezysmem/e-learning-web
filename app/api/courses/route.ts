@@ -16,12 +16,12 @@ export async function POST(
 
         const userId = session?.user?.id;
         
-        const user = await prisma.user.findUnique({
-            where: {
-              id: userId,
+        // const user = await prisma.user.findUnique({
+        //     where: {
+        //       id: userId,
            
-            },
-          });
+        //     },
+        //   });
         // const userId = session?.user?.id
         // console.log(userId);
 
@@ -31,7 +31,7 @@ export async function POST(
         
         const course = await db.course.create({
             data: {
-                userId: user.id,
+                userId: userId,
                 title,
                 price: 0,
                 

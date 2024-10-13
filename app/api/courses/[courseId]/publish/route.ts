@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+ 
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth/[...nextauth]/route";
@@ -15,6 +15,7 @@ export async function PATCH(
   try {
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;
+    const user = session?.user;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -51,6 +52,7 @@ export async function PATCH(
       },
       data: {
         isPublished: true,
+        authorId: user?.name,
       }
     });
 

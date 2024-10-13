@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
+    <div className="h-[100vh]">
       <div className="flex items-center py-4 justify-between">
         <Input
           placeholder="Filter courses..."
@@ -63,7 +63,7 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm bg-white"
         />
         <Link href="/teacher/create">
         <Button>
@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({
         </Button>
         </Link>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border bg-white">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -123,7 +123,7 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
-          variant="outline"
+          // variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
           Previous
         </Button>
         <Button
-          variant="outline"
+          // variant="outline"
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}

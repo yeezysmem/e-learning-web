@@ -1,31 +1,23 @@
-import { withAuth } from "next-auth/middleware";
+// middleware.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-// Define the middleware function
-const middleware = withAuth(
-  // Middleware function that takes 'req' as an argument
-  function (req) {
-    // Implement any logic here to be executed before the route handler
-    // This function can be left empty if no additional logic is needed
-  },
-  // Options for the middleware
-  {
-    callbacks: {
-      // Callback function to determine if the user is authorized to access the route
-      authorized: ({ req, token }) => {
-        // Check if the request path starts with '/protected' and the user has a valid token
-        if (
-          req.nextUrl.pathname.startsWith('/protected') &&
-          token === null
-        ) {
-          // If the conditions are not met, return false to deny access
-          return false;
-        }
-        // If the conditions are met, return true to allow access
-        return true;
-      }
-    }
-  }
-);
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-// Export the middleware
-export default middleware;
+//   const pathname = req.nextUrl.pathname;
+
+//   // Define protected paths and roles
+//   if (pathname.startsWith('/teacher')) {
+//     // Check if the user has a valid token and role
+//     if (!token || token.role !== 'teacher') {
+//       return NextResponse.redirect(new URL('/unauthorized', req.url));
+//     }
+//   }
+
+//   return NextResponse.next();
+}
+
+// export const config = {
+//   matcher: ['/teacher/:path*'],
+// };

@@ -1,0 +1,281 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  name String
+  email String [unique, not null]
+  emailVerified DateTime
+  image String
+  accounts Account [not null]
+  sessions Session [not null]
+  Authenticator Authenticator [not null]
+  role String [not null, default: 'user']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Session {
+  sessionToken String [unique, not null]
+  userId String [not null]
+  expires DateTime [not null]
+  user User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Account {
+  userId String [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+
+  indexes {
+    (provider, providerAccountId) [pk]
+  }
+}
+
+Table verificationToken {
+  id String [pk]
+  identifier String
+  email String
+  token String [unique]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
+}
+
+Table Authenticator {
+  credentialID String [unique, not null]
+  userId String [not null]
+  providerAccountId String [not null]
+  credentialPublicKey String [not null]
+  counter Int [not null]
+  credentialDeviceType String [not null]
+  credentialBackedUp Boolean [not null]
+  transports String
+  user User [not null]
+
+  indexes {
+    (userId, credentialID) [pk]
+  }
+}
+
+Table Category {
+  id String [pk]
+  name String [unique, not null]
+  course Course [not null]
+}
+
+Table ProgramminLanguage {
+  id String [pk]
+  name String [unique, not null]
+  version String
+  chapter Chapter [not null]
+
+  indexes {
+    (name, version) [unique]
+  }
+}
+
+Table Type {
+  id String [pk]
+  name String [unique, not null]
+  course Course [not null]
+  chapter Chapter [not null]
+}
+
+Table Course {
+  id String [pk]
+  userId String [not null]
+  userName String
+  userImage String
+  title String [not null]
+  description String
+  imageUrl String
+  price Float [not null]
+  isPublished Boolean [not null, default: false]
+  categoryId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  typeId String
+  rating Float
+  authorId String
+  category Category
+  attachments Attachment [not null]
+  chapters Chapter [not null]
+  chapterType Chapter [not null]
+  purchases Purchase [not null]
+  types Type
+  userProgress UserProgress [not null]
+}
+
+Table Author {
+  id String [pk]
+  name String [unique, not null]
+  bio String
+  website String
+  imageUrl String
+}
+
+Table Chapter {
+  id String [pk]
+  title String [not null]
+  description String
+  course Course [not null]
+  videoUrl String
+  isFree Boolean [not null, default: false]
+  isPublished Boolean [not null, default: false]
+  position Int [not null]
+  muxData MuxData
+  userProgress UserProgress [not null]
+  questions Question [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  courseId String [not null]
+  typeId String
+  types Course
+  Type Type
+  chapterType String
+  taskDescription String
+  imageUrl String
+  taskCriteria String
+  grade String
+  explanation String
+  codeSnippet String
+  rightAnswer String
+  programmingLanguageId String
+  languageVersion String
+  programmingLanguage ProgramminLanguage
+  questionId String
+}
+
+Table Question {
+  id String [pk]
+  question String [not null]
+  option String [not null]
+  isCorrect Boolean [not null]
+  chapterId String [not null]
+  chapter Chapter [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Attachment {
+  id String [pk]
+  name String [not null]
+  url String [not null]
+  courseId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  course Course [not null]
+}
+
+Table MuxData {
+  id String [pk]
+  playbackId String [not null]
+  assetId String [not null]
+  chapterId String [unique, not null]
+  chapter Chapter [not null]
+}
+
+Table UserProgress {
+  id String [pk]
+  userId String [not null]
+  chapterId String [not null]
+  courseId String [not null]
+  chapter Chapter [not null]
+  course Course [not null]
+  isCompleted Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  preferences String
+  grade Int
+  explanation String
+
+  indexes {
+    (userId, chapterId) [unique]
+  }
+}
+
+Table Purchase {
+  id String [pk]
+  userId String [not null]
+  courseId String [not null]
+  course Course [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (userId, courseId) [unique]
+  }
+}
+
+Table StripeCustomer {
+  id String [pk]
+  userId String [not null]
+  stripeCustomerId String [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table UserRecomendations {
+  id String [pk]
+  userId String [not null]
+  preferences String [not null]
+  recommendations String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table UserPreferences {
+  id String [pk]
+  userId String [not null]
+  preferences String [not null]
+  recommendations String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Ref: Session.userId > User.id [delete: Cascade]
+
+Ref: Account.userId > User.id [delete: Cascade]
+
+Ref: Authenticator.userId > User.id [delete: Cascade]
+
+Ref: Course.categoryId > Category.id
+
+Ref: Course.typeId > Type.id
+
+Ref: Chapter.courseId > Course.id [delete: Cascade]
+
+Ref: Chapter.typeId > Course.id [delete: Cascade]
+
+Ref: Chapter.typeId > Type.id
+
+Ref: Chapter.programmingLanguageId > ProgramminLanguage.id
+
+Ref: Question.chapterId > Chapter.id [delete: Cascade]
+
+Ref: Attachment.courseId > Course.id [delete: Cascade]
+
+Ref: MuxData.chapterId - Chapter.id [delete: Cascade]
+
+Ref: UserProgress.chapterId > Chapter.id [delete: Cascade]
+
+Ref: UserProgress.courseId > Course.id
+
+Ref: Purchase.courseId > Course.id [delete: Cascade]

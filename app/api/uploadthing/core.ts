@@ -26,11 +26,6 @@ interface CustomErrorResponse extends Record<string, unknown> {
     return { userId };
   }
   
-
-
-// Fake auth function
- 
-// FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
     courseImage: f({image: {maxFileSize:"4MB", maxFileCount:1}})
     .middleware(() => handleAuth())
@@ -45,3 +40,4 @@ courseAttachement: f(["text","image","video","audio","pdf"])
 } satisfies FileRouter;
  
 export type OurFileRouter = typeof ourFileRouter;
+

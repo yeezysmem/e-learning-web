@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
-
+import { BookOpen, GraduationCap } from "lucide-react";
 import { IconBadge } from "@/components/icon-badge";
 import { formatPrice } from "@/lib/format";
-import {GraduationCap} from "lucide-react";
-// import { CourseProgress } from "@/components/course-progress";
+import { Button } from "@/components/ui/button";
+import { CourseProgress } from "@/app/components/course-progress";
+import { cn } from "@/lib/utils";
+import colab from "@/public/colab.svg";
 
 interface CourseCardProps {
   id: string;
@@ -17,7 +18,9 @@ interface CourseCardProps {
   category: string;
   description: string;
   chapterType: string;
-};
+  isSuggestions?: boolean;
+  authorId?: string;
+}
 
 export const CourseCard = ({
   id,
@@ -29,55 +32,63 @@ export const CourseCard = ({
   category,
   description,
   chapterType,
+  isSuggestions,
+  authorId
 }: CourseCardProps) => {
   return (
     <Link href={`/courses/${id}`}>
-      <div className="group hover:shadow-sm transition overflow-hidden border bg-white rounded-lg p-3 h-full">
-        <div className="relative w-full aspect-video rounded-md overflow-hidden">
-          <Image
-            fill
-            sizes="(max-width: 768px)"
-            priority={true}
-            className="object-cover"
-            alt={title}
-            src={imageUrl}
-          />
-        </div>
-        <div className="flex flex-col pt-2">
-          <div className="text-lg md:text-base font-medium group-hover:text-sky-700 transition line-clamp-2">
-            {title}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {category}
-          </p>
-          <p className="text-xs text-muted-foreground">User Name</p>
-          <div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
-            <div className="flex items-center gap-x-1 text-slate-500">
-              <IconBadge size="sm" icon={GraduationCap} variant="white" />
-              <span>
-                {chaptersLength} {chaptersLength === 1 ? "Chapter" : "Chapters"}
-              </span>
-            </div>
-          </div>
-          <div className="grid">
-            <p>{description}</p>
-            <p>${price}</p>
-            <p>{chapterType}</p>
-          </div>
-          
-          {/* {progress !== null ? (
-            <CourseProgress
-              variant={progress === 100 ? "success" : "default"}
-              size="sm"
-              value={progress}
-            />
-          ) : (
-            <p className="text-md md:text-sm font-medium text-slate-700">
-              {formatPrice(price)}
-            </p>
-          )} */}
-        </div>
+  <div className="hover:shadow-xl transition-transform transform hover:scale-105 overflow-hidden border border-gray-200 bg-white rounded-lg p-4 h-full flex flex-col justify-between">
+    
+    {/* Зображення курсу */}
+    <div className="relative w-full aspect-video rounded-md overflow-hidden bg-gray-100">
+      <Image
+        fill
+        priority={true}
+        className="object-cover"
+        alt={title}
+        src={imageUrl}
+      />
+    </div>
+
+    {/* Логотип Colab для пропозицій */}
+    {isSuggestions && (
+      <div className="bg-purple-600 mt-4 p-1.5 flex items-center justify-center rounded-md">
+        <Image src={colab} width={130} height={50} alt="colab" />
       </div>
-    </Link>
-  )
-}
+    )}
+    
+    {/* Текстова інформація про курс */}
+    <div className="flex flex-col pt-4 flex-grow">
+      <h3 className="text-xl font-semibold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-2">
+        {title}
+      </h3>
+      
+      <p className="mt-1 text-sm text-gray-500">{category}</p>
+      
+      <div className="mt-4 flex items-center gap-x-2 text-sm text-gray-600">
+        <IconBadge size="sm" icon={GraduationCap} variant="white" />
+        <span>
+          {chaptersLength} {chaptersLength === 1 ? "Chapter" : "Chapters"}
+        </span>
+      </div>
+    </div>
+
+    {/* Прогрес курсу */}
+    <div className="mt-4">
+      <CourseProgress
+        variant={progress === 100 ? "success" : "default"}
+        size="sm"
+        value={progress}
+      />
+    </div>
+    <div className="mt-4">
+      <button className="w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-300 ease-in-out">
+        $20
+      </button>
+    </div>
+    
+  </div>
+</Link>
+
+  );
+};

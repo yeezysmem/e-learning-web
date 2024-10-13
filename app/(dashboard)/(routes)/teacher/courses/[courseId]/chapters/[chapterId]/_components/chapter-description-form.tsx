@@ -55,11 +55,11 @@ export const ChapterDescriptionForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
-      toast.success("Chapter updated");
+      // toast.success("Chapter updated");
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   }
 

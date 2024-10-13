@@ -135,8 +135,6 @@ const SurveyForm = ({courseId,chapterId, initialData} : SurveyFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Question:", question);
-    console.log("Options:", options);
     // Further logic to send data to the server or process it within the application
   };
 

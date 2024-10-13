@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Chapter } from "@prisma/client";
 import clsx, { ClassValue }  from "clsx";
+import {ReverseCombobox} from "@/components/ui/reverseCombobox";
 
 import {
   Form,
@@ -23,21 +24,23 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Combobox } from "@/components/ui/combobox";
 
-interface TaskLanguageFormProps {
+interface ProgrammingLanguagesFormProps {
   initialData: Chapter;
   courseId: string;
+  chapterId: string;
   options: { label: string; value: string }[];
 };
 
 const formSchema = z.object({
-  programmingLanguage: z.string().min(1),
+  programmingLanguageId: z.string().min(1),
 });
 
-export const TaskLanguageForm = ({
+export const ProgrammingLanguagesForm = ({
   initialData,
   courseId,
+  chapterId,
   options,
-}: TaskLanguageFormProps) => {
+}: ProgrammingLanguagesFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -46,28 +49,29 @@ export const TaskLanguageForm = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { programmingLanguage: initialData?.programmingLanguageId || "" },
+    defaultValues: { programmingLanguageId: initialData?.programmingLanguageId || "" },
   });
 
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
+      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
       toast.success("Course updated");
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   };
 
-  const selectedOption = options.find((option) => option.value === initialData.programmingLanguage);
+  const selectedOption = options.find((option) => option.value === initialData.programmingLanguageId);
+  
 
   return (
     <div className="mt-6 border bg-white rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        <span className="font-bold">Course category</span>
+        <span className="font-bold">Programming language</span>
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>Cancel</>
@@ -79,7 +83,7 @@ export const TaskLanguageForm = ({
           )}
         </Button>
       </div>
-      {!isEditing && <p className={clsx("text-sm mt-2", !initialData.programmingLanguageId && "text-slate-500 italic")}>{selectedOption?.label || "No category"}</p>}
+      {!isEditing && <p className={clsx("text-sm mt-2", !initialData.programmingLanguageId && "text-slate-500 italic")}>{selectedOption?.value || "No Programming languages"}</p>}
       {isEditing && (
         <Form {...form}>
           <form
@@ -88,12 +92,12 @@ export const TaskLanguageForm = ({
           >
             <FormField
               control={form.control}
-              name="programmingLanguage"
+              name="programmingLanguageId"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Combobox
-                     options={...options} 
+                    <ReverseCombobox
+                     options={options} 
                      {...field} />
                   </FormControl>
                   <FormMessage />

@@ -14,7 +14,7 @@ export const DataCard = ({ value, label, shouldFortmat }: DataCardProps) => {
       </CardHeader>
       <CardContent>
         <div className="text-2xl">
-            {shouldFortmat ? formatPrice(value) : value}
+            {shouldFortmat ? "$" + value : value}
         </div>
       </CardContent>
     </Card>

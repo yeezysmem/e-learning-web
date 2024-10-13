@@ -23,13 +23,9 @@ const CoursesPage = async () => {
         },
     });
     return (
-        <div className='container'>
+        <div className='container bg-gray-100 border m-1.5 rounded-md'>
            <div>
-           {/* <Link href="/teacher/create">
-                <Button>
-                    Create Course
-                </Button>
-            </Link> */}
+           <h1 className='pt-10 text-lg font-bold'>Your courses</h1>
             <DataTable columns={columns} data={courses} />
            </div>
         </div>

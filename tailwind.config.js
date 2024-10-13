@@ -26,7 +26,7 @@ module.exports = withUt({
         foreground: "hsl(var(--foreground))",
         userName: "#DBCFCF",
         text:"#DBCFCF",
-        sidebarLink: "#FFD188",
+        sidebarLink: "#BBD7F3",
         sidebarLinkActive: "#FFEED4",
         sidebarLinkHover:"#905C0A",
         sidebar: "#222222",

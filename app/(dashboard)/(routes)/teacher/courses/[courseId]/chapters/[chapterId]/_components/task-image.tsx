@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 interface TaskImageProps {
   initialData: Chapter;
   courseId: string;
+  chapterId: string;
 }
 
 const formSchema = z.object({
@@ -26,7 +27,7 @@ const formSchema = z.object({
   }),
 });
 
-export const TaskImage = ({ initialData, courseId }: TaskImageProps) => {
+export const TaskImage = ({ initialData, courseId,chapterId }: TaskImageProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -35,7 +36,7 @@ export const TaskImage = ({ initialData, courseId }: TaskImageProps) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
+      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
       toast.success("Course updated");
       toggleEdit();
       router.refresh();

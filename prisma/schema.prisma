@@ -7,6 +7,9 @@ generator client {
     provider = "prisma-client-js"
     previewFeatures = ["fullTextSearch","fullTextIndex" ]
 }
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
 
 model User {
   id            String          @id @default(cuid())
@@ -18,6 +21,7 @@ model User {
   sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
+   role          String          @default("user")
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -93,7 +97,9 @@ model Category {
 model ProgramminLanguage {
     id   String @id @default(uuid())
     name String @unique
+    version String?
     chapter Chapter[]
+     @@unique([name, version])
 }
 
 
@@ -122,9 +128,7 @@ model Course {
     typeId      String?
     rating      Float?
     authorId   String?
-    // author     User? @relation(fields: [authorId], references: [id])
 
-    // author     User? @relation(fields: [authorId], references: [id])
 
     category    Category?    @relation(fields: [categoryId], references: [id])
     attachments Attachment[]
@@ -139,13 +143,14 @@ model Course {
     @@index([title])
 }
 
+
 model Author {  
   id           String     @id @default(uuid())
   name         String   @unique
   bio          String?
   website      String?
   imageUrl     String?
-//   courses      Course[]  @relation
+ 
 }
 
 model Chapter {
@@ -175,6 +180,7 @@ model Chapter {
     codeSnippet  String?
     rightAnswer  String?
     programmingLanguageId String?
+    languageVersion String?
     programmingLanguage ProgramminLanguage? @relation(fields: [programmingLanguageId], references: [id])
     questionId String?
 
@@ -227,6 +233,7 @@ model UserProgress {
     isCompleted Boolean  @default(false)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
+    preferences String?
 
     grade      Int?
     explanation String?
@@ -255,4 +262,24 @@ model StripeCustomer {
     stripeCustomerId String   @unique
     createdAt        DateTime @default(now())
     updatedAt        DateTime @updatedAt
+}
+
+
+model UserRecomendations {
+    id        String  @id @default(uuid())
+    userId    String
+    preferences String
+    recommendations String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+
+model UserPreferences {
+    id        String  @id @default(uuid())
+    userId    String
+    preferences String
+    recommendations String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

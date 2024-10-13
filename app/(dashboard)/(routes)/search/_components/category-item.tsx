@@ -37,7 +37,7 @@ export const CategoryItem = ({ label, value }: CategoryItemProps) => {
       className={cn("py-2 px-3 text-sm border border-slate-200 rounded-full flex items-center gap-x-1 hover:border-sky-700 bg-white transition", isSelected && "border-sky-700 bg-sky-200/20")}
       type="button"
     >
-      <label className="truncate">{label}</label>
+      <label className="truncate cursor-pointer">{label}</label>
     </button>
   );
 };

@@ -1,16 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import typeone from "../../../../../../../../../../public/typeone.svg";
-import typetwo from "../../../../../../../../../../public/typetwo.svg";
-import typethree from "../../../../../../../../../../public/typethree.svg";
-import Link from "next/link";
+import exam from "@/public/exam.svg";
+import lectures from "@/public/lectures.svg";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useState } from "react";
- 
+
 import * as z from "zod";
- 
+
 import { Chapter } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
@@ -35,7 +33,9 @@ const ChapterCard = ({
   chapter,
 }: //   image,
 ChapterCardProps) => {
-  const [chapterType, setChapterType] = useState<string | undefined>(initialData?.chapterType);
+  const [chapterType, setChapterType] = useState<string | undefined>(
+    initialData?.chapterType
+  );
 
   const router = useRouter();
 
@@ -45,7 +45,7 @@ ChapterCardProps) => {
         `/api/courses/${courseId}/chapters/${chapterId}/chapterType`,
         { chapterType: "Exam" }
       );
-      toast.success("Final exam selected");
+      toast.success("Practical task type selected");
       router.refresh();
       router.push(`/teacher/courses/${courseId}/chapters/${chapterId}`);
     } catch {
@@ -53,7 +53,7 @@ ChapterCardProps) => {
     }
   };
 
-  const onResources = async () => {
+  const onLectures = async () => {
     try {
       await axios.patch(
         `/api/courses/${courseId}/chapters/${chapterId}/chapterType`,
@@ -67,73 +67,43 @@ ChapterCardProps) => {
     }
   };
 
-  const onSurveys = async () => {
-    try {
-      await axios.patch(
-        `/api/courses/${courseId}/chapters/${chapterId}/chapterType`,
-        { chapterType: "Supplementary resources" }
-      );
-      toast.success("Supplementary resources selected");
-      router.refresh();
-      router.push(`/teacher/courses/${courseId}/chapters/${chapterId}`);
-      
-    } catch {
-      toast.error("Something went wrong");
-    }
-  };
-
   return (
-    <div className="flex gap-6">
-      {/* <Link
-        href={`/teacher/courses/${courseId}/chapters/${chapterId}`}
+    <div className="flex gap-6 mt-8">
+      <div
+        className="bg-[#fff] rounded-md cursor-pointer border border-[#000]"
         onClick={onFinalExam}
-      > */}
-        <div className="bg-[#E1E0FC] rounded-md cursor-pointer" onClick={onFinalExam}>
-          <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
-            <Image src={typeone} width={270} height={250}  alt="FinalExam" />
-          </div>
-          <div className="bg-[#C7C8FA] p-4 rounded-b-md">
-            <h1 className="text-lg font-semibold">Final exam</h1>
-            <p className="text-[#484848]">
-              Please add your content here. Keep it short and simple. And smile
-            </p>
-          </div>
+      >
+        <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
+          <Image src={exam} width={270} height={250} alt="FinalExam" />
         </div>
-      {/* </Link> */}
-      {/* <Link
-        href={`/teacher/courses/${courseId}/chapters/${chapterId}`}
-        onClick={onResources}
-      > */}
-        <div className="bg-[#E7F1ED] rounded-md cursor-pointer"  onClick={onResources}>
-          <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
-            <Image src={typetwo} width={253} height={250} alt="asdasd" />
-          </div>
-          <div className="bg-[#CBE1D9] p-4 rounded-b-md">
-            <h1 className="text-lg font-semibold">Lectures & Materials</h1>
-            <p className="text-[#484848]">
-              Please add your content here. Keep it short and simple. And smile
-              :)
-            </p>
-          </div>
+        <div className="bg-[#000] p-4 rounded-b-md">
+          <h1 className="text-lg font-semibold text-white">Practical task</h1>
+          <p className="text-[#fff] pt-4">
+            This chapter type is a crucial component of our platform,
+            bridging the gap between theoretical learning and practical
+            application, and helping students achieve a higher level of
+            proficiency in coding.
+          </p>
         </div>
-      {/* </Link> */}
-      {/* <Link
-        href={`/teacher/courses/${courseId}/chapters/${chapterId}`}
-        onClick={onSurveys}
-      > */}
-        <div className="bg-[#F5D3D3] rounded-md cursor-pointer" onClick={onSurveys}>
-          <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
-            <Image src={typethree} width={300}  alt="asdasd" />
-          </div>
-          <div className="bg-[#FEB8B8] p-4 rounded-b-md">
-            <h1 className="text-lg font-semibold">Supplementary resources</h1>
-            <p className="text-[#484848]">
-              Please add your content here. Keep it short and simple. And smile
-              :)
-            </p>
-          </div>
+      </div>
+
+      <div
+        className="bg-[#fff] rounded-md cursor-pointer border border-[#000]"
+        onClick={onLectures}
+      >
+        <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
+          <Image src={lectures} width={270} height={260} alt="asdasd" />
         </div>
-      {/* </Link> */}
+        <div className="bg-[#000] p-4 rounded-b-md">
+          <h1 className="text-lg font-semibold text-white">Lectures</h1>
+          <p className="text-[#fff] pt-4">
+            The Lectures chapter type is essential for delivering high-quality,
+            structured educational content. It combines the benefits of
+            traditional lecture-based learning with the flexibility and
+            interactivity of an online platform
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

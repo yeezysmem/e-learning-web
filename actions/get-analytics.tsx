@@ -47,7 +47,7 @@ export const getAnalytics = async (userId: string) => {
         }
 
     } catch (error) {
-        console.log("[GET_ANALYTICS]", error);
+        // console.log("[GET_ANALYTICS]", error);
         return {
             data: [],
             totalRevenue: 0,

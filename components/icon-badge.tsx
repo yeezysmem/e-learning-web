@@ -11,6 +11,7 @@ const backgroundVariants = cva(
         default: "bg-sky-100",
         success: "bg-emerald-100",
         white: "bg-white",
+        purple: "bg-purple-200",
       },
       size: {
         default: "p-2",
@@ -31,6 +32,7 @@ const iconVariants = cva(
       variant: {
         default: "text-sky-700",
         success: "text-emerald-700",
+        purple: "text-[#000000]"
       },
       size: {
         default: "h-8 w-8",

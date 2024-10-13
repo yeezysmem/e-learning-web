@@ -7,10 +7,13 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="h-full ">
-      <Header />
-
-      <main className="h-full">{children}</main>
+    <div className="flex h-full">
+      <div className="fixed">
+      <Sidebar />
+      </div>
+      <main className="md:pl-44 h-full flex-grow overflow-auto bg-white mt-1.5">
+        {children}
+      </main>
     </div>
   );
 }

@@ -66,7 +66,7 @@ export const ChapterActions = ({
       <Button
         onClick={onClick}
         disabled={disabled || isLoading}
-        variant="outline"
+        // variant="outline"
         size="sm"
       >
         {isPublished ? "Unpublish" : "Publish"}

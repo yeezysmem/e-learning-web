@@ -9,6 +9,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Chapter } from "@prisma/client";
+import { useRef, useEffect } from "react";
 
 import {
   Form,
@@ -20,8 +21,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 // import { Editor } from "@/components/editor";
-import Editor from "@monaco-editor/react";
-import { Preview } from "@/components/preview";
+import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
+
 
 interface TaskCodeSnippetProps {
   initialData: Chapter;
@@ -40,83 +41,55 @@ export const TaskCodeSnippet = ({
   chapterId,
   defaultLanguage,
 }: TaskCodeSnippetProps) => {
-  const [isEditing, setIsEditing] = useState(false);
 
-  const toggleEdit = () => setIsEditing((current) => !current);
 
-  const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      codeSnippet: initialData?.codeSnippet || "",
-    },
-  });
+  const editorRef = useRef(null);
 
-  const { isSubmitting, isValid } = form.formState;
+  function handleEditorDidMount(editor, monaco) {
+    editorRef.current = editor;
+  }
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  async function handleSendSnippet() {
     try {
-      await axios.patch(
-        `/api/courses/${courseId}/chapters/${chapterId}`,
-        values
-      );
-      toast.success("Chapter updated");
-      toggleEdit();
-      router.refresh();
-    } catch {
-      toast.error("Something went wrong");
-    }
-  };
+      const codeSnippet = editorRef.current.getValue();
+
+      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {
+        codeSnippet,
+      });
+
+      toast.success("Your snippet has been submitted");
+      // router.reload();
+    } catch (error) {
+      // console.error("Error sending snippet:", error);
+      // toast.error("Something went wrong");
+    } 
+  }
 
   return (
-    <div className="mt-6 border bg-gray-400 rounded-md p-4">
+    <div className="mt-6 border bg-white rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        <span className="font-bold"> Code Snippet</span>
+        <div className="font-bold">
+          {defaultLanguage ? (
+            <span>{defaultLanguage} snippet</span>
+          ) : (
+            <span>Choose programming language</span>
+          )}
+        </div>
       </div>
       <div className="pt-4">
-          <Editor
-            height="20vh"
-            width="100%"
-            defaultLanguage={defaultLanguage}
-            defaultValue="// some comment"
-            theme="white"
-          />
-          <div className="grid items-center pt-2">
-            <Button disabled={!isValid || isSubmitting} type="submit" >
-              Save
-            </Button>
-          </div>
+        <div className="bg-[#222222] p-2 rounded-md"><Editor
+          height="20vh"
+          width="100%"
+          defaultLanguage={defaultLanguage}
+          defaultValue={initialData?.codeSnippet || "//"}
+          theme="vs-dark"
+          onMount={handleEditorDidMount}
+        /></div>
+        <div className="grid items-center pt-2">
+        <Button onClick={handleSendSnippet}>Sumbit</Button>
         </div>
-      {/* {!isEditing && (
-        <div
-          className={cn(
-            "text-sm mt-2",
-            !initialData.codeSnippet && "text-slate-500 italic"
-          )}
-        >
-          {!initialData.codeSnippet && "Describe your task here..."}
-          {initialData.codeSnippet && (
-            <Preview value={initialData.codeSnippet} />
-          )}
-        </div>
-      )}
-      {isEditing && (
-        <div className="pt-4">
-          <Editor
-            height="20vh"
-            width="100%"
-            defaultLanguage={defaultLanguage}
-            defaultValue="// some comment"
-            theme="vs-dark"
-          />
-          <div className="flex items-center gap-x-2">
-            <Button disabled={!isValid || isSubmitting} type="submit" >
-              Save
-            </Button>
-          </div>
-        </div>
-      )} */}
+      </div>
     </div>
   );
 };

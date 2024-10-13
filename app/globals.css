@@ -75,4 +75,26 @@
   }
 }
 
+/* Додаємо кастомні стилі для анімації типінга */
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: transparent; }
+}
+
+.typewriter {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid rgba(11, 228, 22, 0.75); /* Колір та товщина курсора */
+  animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
+  font-family: monospace; /* Моноширинний шрифт для типінга */
+  width: 0; /* Початкова ширина */
+}
+
+
 @import "~@uploadthing/react/styles.css"

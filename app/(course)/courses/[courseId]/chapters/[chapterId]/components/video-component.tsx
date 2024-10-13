@@ -79,7 +79,6 @@ export const VideoComponent = ({
           )}
           onCanPlay={() => setIsReady(true)}
           onEnded={onEnd}
-          autoPlay
           playbackId={playbackId}
         />
       )}

@@ -20,14 +20,14 @@ export const NavbarRoutes = () => {
                     search
                 </div>
             )}
-            <Link href="/teacher/courses" className="">
+            {/* <Link href="/teacher/courses" className="">
                 <button className="flex items-center justify-center gap-x-2 mt-5 px-4 text-white">
                     <span>
                         Teacher mode
                     </span>
                 </button>
-                </Link>
-            <div className="flex gap-x-2 ml-auto">
+                </Link> */}
+            {/* <div className="flex gap-x-2 ml-auto">
                 {isTeacherPage || isCoursePage ? (
                     <Link href="/">
                         <button className="text-sm">
@@ -42,7 +42,7 @@ export const NavbarRoutes = () => {
                     </Link>
                 ) : <div> asdasd</div>}
 
-            </div>
+            </div> */}
         </>
     )
 }

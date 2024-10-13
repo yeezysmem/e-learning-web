@@ -13,7 +13,7 @@ interface ChartProps {
 
 export const Chart = ({data}: ChartProps) => {
     return <Card>
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={400} className="py-5">
             <BarChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
