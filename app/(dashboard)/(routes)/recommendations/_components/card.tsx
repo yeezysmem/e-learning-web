@@ -24,7 +24,7 @@ const UserTypeCard = ({ title, image,onSelect }: UserTypeCardProps) => {
       onClick={handleClick}
     >
       <div className="relative w-full">
-        <Image src={image} height={140} width={140} alt={title} priority={true} />
+        <Image src={image || ""} height={140} width={140} alt={title} priority={true} />
       </div>
       <p className="text-sm font-medium pt-4 flex items-center justify-center">{title}</p>
     </div>

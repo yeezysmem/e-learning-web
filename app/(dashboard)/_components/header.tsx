@@ -11,7 +11,8 @@ import { callbackify } from "util";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { IconBadge } from "@/components/icon-badge";
-import SendButton from "../(routes)/role/components/sendButton";
+// import SendButton from "../(routes)/role/components/sendButton";
+
 // import { authOptions } from "../../api/auth/";
 
 const Header = () => {
@@ -40,9 +41,9 @@ const Header = () => {
               <li className=" hover:text-green-400 transition-all cursor-pointer">
                 <Link href="/search"> Search </Link>
               </li>
-              <li className=" hover:text-green-400 transition-all cursor-pointer">
+              {/* <li className=" hover:text-green-400 transition-all cursor-pointer">
                 <SendButton userId={user?.id} newRole={"teacher"} />
-              </li>
+              </li> */}
             {/* {role === "user" ? ( */} 
               {/* <li className=" hover:text-green-400 transition-all cursor-pointer">
                 <SendButton userId={user?.id} newRole={"teacher"} />
@@ -53,7 +54,7 @@ const Header = () => {
                 <Link href="/teacher/courses"> Create course </Link>
               </li>
             {/* // ) : null} */}
-            {role === "teacher" ? (
+            {/* {role === "teacher" ? (
               <li className=" hover:text-green-400 transition-all cursor-pointer">
                 <Link href="/teacher/analytics"> Analytics </Link>
               </li>
@@ -62,13 +63,13 @@ const Header = () => {
               <li className=" hover:text-green-400 transition-all cursor-pointer">
                 <SendButton userId={user?.id} newRole={"user"} />
               </li>
-            ) : null}
+            ) : null} */}
             <li>
               {session ? (
                 <div className="flex justify-between cursor-pointer items-center gap-2">
                   <div>
                     <Image
-                      src={session?.user?.image}
+                      src={session?.user?.image || ""}
                       alt="Picture of the author"
                       width={30}
                       height={30}

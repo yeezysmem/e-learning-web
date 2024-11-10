@@ -1,31 +1,19 @@
-import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { File } from "lucide-react";
 import { BookOpenText } from "lucide-react";
 import { Banner } from "@/components/banner";
 import { Separator } from "../../../../../components/ui/separator";
-import { Preview } from "@/components/preview";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/authOptions";
 import { getChapter } from "@/actions/get-chapter";
 import { VideoComponent } from "./components/video-component";
-// import { CourseEnrollButton } from "./_components/enroll-button";
 import { CourseEnrollButton } from "./components/enroll-button";
 import { CourseProgressButton } from "./components/course-progress-button";
 import AssistantForm from "./components/ai-system";
-import Markdown from "react-markdown";
-import Rating from "./components/rating-form";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import RecommendationGenerator from "./components/ai-test";
 import Loading from "../../loading";
 import { Suspense } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { CourseNavbar } from "../../_components/course-navbar";
 import { getProgress } from "@/actions/get-progress";
-import ReactHtmlParser from "react-html-parser";
 
 const ChapterIdPage = async ({
   params,
@@ -34,7 +22,6 @@ const ChapterIdPage = async ({
 }) => {
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
-
   if (!userId) {
     return redirect("/");
   }
@@ -60,14 +47,12 @@ const ChapterIdPage = async ({
   // const code = ReactHtmlParser(chapter.description);
   const isLocked = !chapter.isFree && !purchase;
   const completeOnEnd = !!purchase && !userProgress?.isCompleted;
-  const taskDescription = chapter.taskDescription;
-  const codeString = "(num) => num + 1";
-  const progressCount = await getProgress(userId, course.id);
+  // const taskDescription = chapter.taskDescription;
+  // const codeString = "(num) => num + 1";
+  // const progressCount = await getProgress(userId, course.id);
 
   return (
     <div>
-      {/* <CourseNavbar course={course} progressCount={progressCount} /> */}
-
       {userProgress?.isCompleted && (
         <Banner variant="success" label="You already completed this chapter." />
       )}
@@ -79,7 +64,7 @@ const ChapterIdPage = async ({
       )}
       <div className="flex flex-col mb-20 bg-white">
         {chapter.videoUrl ? (
-          <Suspense fallback={<Loading />}>
+          // <Suspense fallback={<Loading />}>
             <div className="p-4">
               <VideoComponent
                 chapterId={params.chapterId}
@@ -94,14 +79,14 @@ const ChapterIdPage = async ({
                 completeOnEnd={completeOnEnd}
               />
             </div>
-          </Suspense>
+          // </Suspense>
         ) : null}
         <div className="border rounded-md">
           <div className="p-4 flex bg-white flex-col md:flex-row items-center justify-between rounded-t-md ">
             <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
             {purchase ? (
               chapter.chapterType === "Exam" ? (
-                userProgress?.grade !== null && userProgress?.grade > 5 ? (
+                userProgress?.grade != null && userProgress?.grade > 5 ? (
                   <CourseProgressButton
                     chapterId={params.chapterId}
                     courseId={params.courseId}
@@ -112,7 +97,6 @@ const ChapterIdPage = async ({
                   />
                 ) : userProgress?.grade === null ? null : null
               ) : (
-                // <p >Try Again</p>
                 <CourseProgressButton
                   chapterId={params.chapterId}
                   courseId={params.courseId}
@@ -141,50 +125,28 @@ const ChapterIdPage = async ({
               </pre>
               <p
                 className="quill px-4 pt-2 pb-4 text-sm"
-                dangerouslySetInnerHTML={{ __html: chapter.description }}
-              >
-                {/* <SyntaxHighlighter language="javascript" style={dracula}>
-                {code}
-                </SyntaxHighlighter> */}
-              </p>
+                dangerouslySetInnerHTML={{ __html: chapter.description || "" }}
+              ></p>
             </div>
 
             <div className="mt-8 quill px-4">
               {chapter.chapterType === "Exam" && (
                 <div>
-                  {/* {!isLocked ? (
-                   
-                  ) : null} */}
-                  {chapter.imageUrl ? (
-                    <div className="relative p-4 bg-gray-100 border border-gray-300 rounded-md h-64 w-full mb-8">
-                    <Image
-                      src={chapter.imageUrl}
-                      layout="fill"
-                      objectFit="cover" // Or 'contain' depending on how you want the image to behave
-                      alt="chapter image"
-                      className="absolute inset-0 rounded-xl p-1"
-                    />
-                  </div>
                   
-                    
-                  ) : null}
-
                   <AssistantForm
                     chapterId={chapter.id}
-                    taskCriteria={chapter.taskCriteria}
-                    rightAnswer={chapter.rightAnswer}
+                    taskCriteria={chapter.taskCriteria || ""}
+                    rightAnswer={chapter.rightAnswer || ""}
                     courseId={params.courseId}
-                    grade={userProgress?.grade}
-                    explanation={userProgress?.explanation}
+                    grade={userProgress?.grade || 0}
+                    explanation={userProgress?.explanation || ""}
                     isLocked={isLocked}
-                    taskDescription={chapter.taskDescription}
-                    defaultLanguage={chapter.programmingLanguageId}
-                    codeSnippet={chapter.codeSnippet}
+                    taskDescription={chapter.taskDescription || ""}
+                    defaultLanguage={chapter.programmingLanguageId || ""}
+                    codeSnippet={chapter.codeSnippet || ""}
                     isCompleted={!!userProgress?.isCompleted}
-                    languageVersion={chapter?.languageVersion}
-                  />
-                  {/* <RecommendationGenerator /> */}
-                  {/* <Rating chapterId={chapter.id} /> */}
+                    languageVersion={chapter?.languageVersion || ""}
+                    chapterImage={chapter?.imageUrl || ""}                  />
                 </div>
               )}
             </div>

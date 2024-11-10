@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs";
 import { Chapter, Course, UserProgress } from "@prisma/client";
 import { redirect } from "next/navigation";
 
@@ -7,7 +6,7 @@ import { CourseProgress } from "@/app/components/course-progress";
 
 import { CourseSidebarItem } from "./course-sidebar-item";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/authOptions";
 interface CourseSidebarProps {
   course: Course & {
     chapters: (Chapter & {
@@ -56,7 +55,7 @@ export const CourseSidebar = async ({
             isCompleted={!!chapter.userProgress?.[0]?.isCompleted}
             courseId={course.id}
             isLocked={!chapter.isFree && !purchase}
-            chapterType={chapter.chapterType}
+            chapterType={chapter.chapterType || ""}
           />
         ))}
       </div>

@@ -6,7 +6,7 @@ import { CourseCard } from "@/app/components/course-card";
 import { db } from "../../../../lib/db";
 import { getCourses } from "@/actions/get-courses";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/authOptions";
 import { CoursesList } from "../../../components/courses-list";
 import type { User } from "next-auth";
 import bgDashboard from "../../../../public/bg-dashboard.jpg";
@@ -32,7 +32,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
   });
 
   const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
+  const userId = session?.user?.id ?? "";
 
   const courses = await getCourses({
     userId,
@@ -40,35 +40,15 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
   });
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen m-1.5 border rounded-md relative overflow-hidden">
-  {/* Розмитий бекграунд */}
-  <div className="absolute inset-0">
-    <Image
-      src={bgDashboard}
-      alt="bg-dashboard"
-      className="object-cover w-full h-[200px] blur-3xl"
-    />
-  </div>
-
-  {/* Основне зображення без розмиття */}
-  <div className="relative w-full h-[200px]">
-    <Image
-      src={bgDashboard}
-      alt="bg-dashboard"
-      className="object-cover w-full h-full rounded-md"
-    />
-  </div>
-
-  {/* Контент поверх зображень */}
-  <div className="relative z-10">
-    <h1 className="mb-5 mt-10 text-2xl font-bold text-gray-800 flex justify-center">
-      Explore new courses
-    </h1>
-    <Categories items={categories} />
-    <CoursesList items={courses} />
-  </div>
-</div>
-
+    <div className="p-6 bg-white min-h-screen  border rounded-md">
+      <div>
+        <h1 className="mb-5 mt-10 text-2xl font-bold text-black flex justify-center">
+          Explore new courses
+        </h1>
+        <Categories items={categories} />
+        <CoursesList items={courses} displayMode="search" />
+      </div>
+    </div>
   );
 };
 

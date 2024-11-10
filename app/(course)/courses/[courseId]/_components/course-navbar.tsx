@@ -3,7 +3,7 @@ import { Chapter, Course, UserProgress } from "@prisma/client";
 import { NavbarRoutes } from "@/components/navbar-routes";
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/authOptions";
 import Image from "next/image";
 import Link from "next/link";
 import { Avatar } from "@/components/ui/avatar";
@@ -29,8 +29,8 @@ export async function CourseNavbar({
 }: CourseNavbarProps) {
   
   const session = await getServerSession(authOptions);
-  const userImage = session?.user?.image;
-  const userName = session?.user?.name;
+  const userImage = session?.user?.image || "";
+  const userName = session?.user?.name || "";
   const [firstName, lastName] = userName.split(" ");
 
 

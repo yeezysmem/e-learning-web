@@ -6,7 +6,7 @@ import { columns } from './_components/columns';
 import { DataTable } from './_components/data-table';
 import {db} from '@/lib/db';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/authOptions';
 
 
 

@@ -1,5 +1,4 @@
 
-import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
@@ -19,7 +18,7 @@ import typeone from "../../../../../../../../../public/typeone.svg";
 import { getServerSession } from "next-auth";
 import Logo from "../../../../../../../../../public/assets/icons/logo.svg";
 import Image from "next/image";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/authOptions";
 import { Button } from "@/components/ui/button";
 
 const TypeId = async ({

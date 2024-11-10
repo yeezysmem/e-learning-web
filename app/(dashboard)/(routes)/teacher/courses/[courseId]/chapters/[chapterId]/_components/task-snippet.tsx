@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Chapter } from "@prisma/client";
 import { useRef, useEffect } from "react";
+import * as monaco from 'monaco-editor';
 
 import {
   Form,
@@ -43,16 +44,15 @@ export const TaskCodeSnippet = ({
 }: TaskCodeSnippetProps) => {
 
 
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
-  const editorRef = useRef(null);
-
-  function handleEditorDidMount(editor, monaco) {
+  function handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor) {
     editorRef.current = editor;
   }
 
   async function handleSendSnippet() {
     try {
-      const codeSnippet = editorRef.current.getValue();
+      const codeSnippet = editorRef.current?.getValue();
 
       await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {
         codeSnippet,

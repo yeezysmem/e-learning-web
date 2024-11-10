@@ -1,12 +1,16 @@
-// Rating.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Rating = ({ courseId }) => {
+// Define the types for the props
+interface RatingProps {
+  courseId: string | number; // The courseId can be a string or a number depending on how it's used
+}
+
+const Rating = ({ courseId }: RatingProps) => {
   const [rating, setRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleRatingChange = (e) => {
+  const handleRatingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRating(parseInt(e.target.value));
   };
 
@@ -17,10 +21,8 @@ const Rating = ({ courseId }) => {
         courseId,
         rating,
       });
-      console.log('Rating submitted successfully:', response.data);
-      // Update course rating state here if needed
     } catch (error) {
-      console.error('Error submitting rating:', error);
+      // Handle error (optional)
     } finally {
       setIsSubmitting(false);
     }

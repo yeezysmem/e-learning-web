@@ -1,14 +1,20 @@
-"use client";
+"use client"
 import Link from "next/link";
 import { CircleDashed, MoveLeft } from "lucide-react";
 import { useState } from "react";
 
-const LinkBack = ({children,href = "/"}) => {
-    const [isLoading, setIsLoading] = useState(false);
+// Define the types for the props
+interface LinkBackProps {
+  children: React.ReactNode;  // Type for children
+  href?: string;              // Type for href, default is "/"
+}
 
-    const handleClick = () => {
-        setIsLoading(true);
-      };
+const LinkBack = ({ children, href = "/" }: LinkBackProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = () => {
+    setIsLoading(true);
+  };
 
   return (
     <div>

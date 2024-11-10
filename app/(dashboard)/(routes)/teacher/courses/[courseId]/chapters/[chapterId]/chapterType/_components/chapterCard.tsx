@@ -15,27 +15,17 @@ import { useRouter } from "next/navigation";
 interface ChapterCardProps {
   courseId: string;
   chapterId: string;
-  chapter: {
-    id: string;
-    name: string;
-    description: string;
-  };
-  initialData: Chapter;
+   
+   
 }
-const formSchema = z.object({
-  chapterType: z.string().min(1),
-});
+ 
 
 const ChapterCard = ({
-  initialData,
   courseId,
   chapterId,
-  chapter,
 }: //   image,
 ChapterCardProps) => {
-  const [chapterType, setChapterType] = useState<string | undefined>(
-    initialData?.chapterType
-  );
+   
 
   const router = useRouter();
 
