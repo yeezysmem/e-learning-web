@@ -31,6 +31,7 @@ module.exports = withUt({
         sidebarLinkHover:"#905C0A",
         sidebar: "#222222",
         editCourseBg: "#EBEBEB",
+        main:"#5719EC",
         primary: {
           DEFAULT: "#222222",
           foreground: "hsl(var(--primary-foreground))",
@@ -74,6 +75,9 @@ module.exports = withUt({
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+      },
+      transitionDuration: {
+        '2000': '2000ms',
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
