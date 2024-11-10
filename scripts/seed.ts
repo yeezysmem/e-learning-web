@@ -6,12 +6,11 @@ const db = new PrismaClient()
 
 async function main() {
     try {
-        await db.category.createMany({
+        await db.levelId.createMany({
             data: [
-                {name: "Français A1"},
-                {name: "Français A2"},
-                {name: "Français B1"},
-                {name: "Français B2"},
+                {name: "Beginner"},
+                {name: "Intermediate"},
+                {name: "Advanced"},
             ]
         });
         console.log("Seeding finished")

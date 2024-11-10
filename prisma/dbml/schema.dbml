@@ -8,21 +8,21 @@ Table User {
   email String [unique, not null]
   emailVerified DateTime
   image String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  role String [not null, default: 'user']
   accounts Account [not null]
   sessions Session [not null]
   Authenticator Authenticator [not null]
-  role String [not null, default: 'user']
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
 }
 
 Table Session {
   sessionToken String [unique, not null]
   userId String [not null]
   expires DateTime [not null]
-  user User [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  user User [not null]
 }
 
 Table Account {
@@ -112,8 +112,9 @@ Table Course {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   typeId String
-  rating Float
   authorId String
+  rating Float
+  level String
   category Category
   attachments Attachment [not null]
   chapters Chapter [not null]
@@ -135,43 +136,43 @@ Table Chapter {
   id String [pk]
   title String [not null]
   description String
-  course Course [not null]
   videoUrl String
   isFree Boolean [not null, default: false]
   isPublished Boolean [not null, default: false]
   position Int [not null]
-  muxData MuxData
-  userProgress UserProgress [not null]
-  questions Question [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   courseId String [not null]
   typeId String
-  types Course
-  Type Type
   chapterType String
   taskDescription String
   imageUrl String
   taskCriteria String
   grade String
-  explanation String
   codeSnippet String
-  rightAnswer String
+  explanation String
   programmingLanguageId String
-  languageVersion String
-  programmingLanguage ProgramminLanguage
   questionId String
+  rightAnswer String
+  languageVersion String
+  course Course [not null]
+  muxData MuxData
+  userProgress UserProgress [not null]
+  questions Question [not null]
+  types Course
+  Type Type
+  programmingLanguage ProgramminLanguage
 }
 
 Table Question {
   id String [pk]
   question String [not null]
-  option String [not null]
-  isCorrect Boolean [not null]
   chapterId String [not null]
-  chapter Chapter [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  isCorrect Boolean [not null]
+  option String [not null]
+  chapter Chapter [not null]
 }
 
 Table Attachment {
@@ -196,15 +197,15 @@ Table UserProgress {
   id String [pk]
   userId String [not null]
   chapterId String [not null]
-  courseId String [not null]
-  chapter Chapter [not null]
-  course Course [not null]
   isCompleted Boolean [not null, default: false]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  preferences String
-  grade Int
+  courseId String [not null]
   explanation String
+  grade Int
+  preferences String
+  chapter Chapter [not null]
+  course Course [not null]
 
   indexes {
     (userId, chapterId) [unique]
@@ -215,9 +216,9 @@ Table Purchase {
   id String [pk]
   userId String [not null]
   courseId String [not null]
-  course Course [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  course Course [not null]
 
   indexes {
     (userId, courseId) [unique]
