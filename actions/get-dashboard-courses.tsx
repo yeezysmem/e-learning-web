@@ -32,7 +32,18 @@ export const getDashboardCourses =  async (userId: string): Promise<DashboardCou
             },
         });
 
-    const courses = purchasedCourses.map((purchasedCourse) => purchasedCourse.course) as CourseWithProgressWithCategory;
+    // const courses = purchasedCourses.map((purchasedCourse) => purchasedCourse.course) as CourseWithProgressWithCategory;
+    
+    // Ensure each course is typed correctly with all expected properties
+    const courses = purchasedCourses.map((purchasedCourse) => {
+        const course = purchasedCourse.course;
+        return {
+            ...course,
+            progress: null,
+            category: course.category,
+            chapters: course.chapters,
+        } as CourseWithProgressWithCategory;
+    });
 
     for (let course of courses) {
         const progress = await getProgress(userId, course.id);

@@ -5,6 +5,7 @@ import { SidebarItem } from "./sidebar-item";
 import { usePathname } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
+import { useState } from "react"; 
 
 const guestRoutes = [
   {
@@ -16,11 +17,6 @@ const guestRoutes = [
     icon: Compass,
     label: "Search",
     href: "/search",
-  },
-  {
-    icon: Settings,
-    label: "Settings",
-    href: "/settings",
   },
 ];
 
@@ -35,6 +31,16 @@ const teacherRoutes = [
     label: "Analytics",
     href: "/teacher/analytics",
   },
+  {
+    icon: Layout,
+    label: "Dashboard",
+    href: "/",
+  },
+  {
+    icon: Compass,
+    label: "Search",
+    href: "/search",
+  },
 ];
 
 
@@ -43,17 +49,18 @@ export const SidebarRoutes = () => {
   const { data: session } = useSession();
   const isTeacherPage = pathname?.includes("/teacher");
 
+
   const routes = isTeacherPage ? teacherRoutes : guestRoutes;
+  const [isLabelVisible, setIsLabelVisible] = useState(true);
   return (
     <div>
       {session ? (
         <div>
-          
-          {/* <div className="flex justify-center text-sm font-[300] ">
-            <button onClick={() => signOut()} className="text-sidebarLink">
+          <div className="flex justify-center text-sm font-[300] ">
+            <button onClick={() => signOut()} className="text-black">
               Sign out
             </button>
-          </div> */}
+          </div>
         </div>
       ) : (
         <div className="flex justify-center">
@@ -62,7 +69,6 @@ export const SidebarRoutes = () => {
           </button>
         </div>
       )}
-
       <div className="mt-16">
       {routes.map((route) => (
         <SidebarItem

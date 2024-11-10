@@ -1,15 +1,25 @@
+"use client"
 import { SidebarRoutes } from "./sidebar-routes";
 import Logo from "./logo";
 import { NavbarRoutes } from "@/components/navbar-routes";
-import SendButton from "../(routes)/role/components/sendButton";
+import Link from "next/link";
+import { useState } from "react";
 
 export const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+  
   return (
-    <div className="overflow-auto p-4 rounded-md">
-      <h1 className="text-2xl font-bold flex justify-center pt-2">SkillUP</h1>
+    
+    <div className="overflow-auto p-4 rounded-md ">
+      <Link href={'/'}>
+        <span className="text-2xl font-bold flex justify-center pt-2 cursor-pointer">SkillUP</span>
+      </Link>
       <div className="flex flex-col flex-grow w-full">
         <SidebarRoutes />
-        {/* <NavbarRoutes /> */}
       </div>
     </div>
   );

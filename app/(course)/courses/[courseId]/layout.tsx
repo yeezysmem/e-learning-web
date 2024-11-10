@@ -6,7 +6,7 @@ import { getProgress } from "@/actions/get-progress";
 import { CourseSidebar } from "./_components/course-sidebar";
 import { CourseNavbar } from "./_components/course-navbar";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/authOptions";
 const CourseLayout = async ({
   children,
   params,
@@ -53,12 +53,14 @@ const CourseLayout = async ({
   return (
     <div className="h-full">
       <div className="md:pl-80 h-[81px] inset-y-0 m-1.5 mb-1.5 ml-2.5 ">
-          <CourseNavbar course={course} progressCount={progressCount} />
+        <CourseNavbar course={course} progressCount={progressCount} />
       </div>
       <div className="hidden md:flex h-full w-80 flex-col fixed inset-y-0 z-50 mt-1.5 ml-1.5">
         <CourseSidebar course={course} progressCount={progressCount} />
       </div>
-      <main className="md:pl-80 inset-y-0 h-full m-1.5 ml-2.5 mt-0">{children}</main>
+      <main className="md:pl-80 inset-y-0 h-full m-1.5 ml-2.5 mt-0">
+        {children}
+      </main>
     </div>
   );
 };

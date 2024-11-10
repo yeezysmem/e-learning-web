@@ -32,7 +32,7 @@ const iconVariants = cva(
       variant: {
         default: "text-sky-700",
         success: "text-emerald-700",
-        purple: "text-[#000000]"
+        purple: "text-[#000000]",
       },
       size: {
         default: "h-8 w-8",
@@ -46,12 +46,15 @@ const iconVariants = cva(
   }
 );
 
+type CombinedVariant = "default" | "success"  | "purple";  // Union of both variant types
+
 type BackgroundVariantsProps = VariantProps<typeof backgroundVariants>;
 type IconVariantsProps = VariantProps<typeof iconVariants>;
 
-interface IconBadgeProps extends BackgroundVariantsProps, IconVariantsProps {
+interface IconBadgeProps extends Omit<BackgroundVariantsProps, 'variant'>, Omit<IconVariantsProps, 'variant'> {
+  variant: CombinedVariant;  // Merge variant types here
   icon: LucideIcon;
-};
+}
 
 export const IconBadge = ({
   icon: Icon,
