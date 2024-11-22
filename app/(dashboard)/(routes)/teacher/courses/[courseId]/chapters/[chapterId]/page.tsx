@@ -19,7 +19,7 @@ import { TaskCriteriaForm } from "./_components/task-criteria";
 import { TaskAnswerForm } from "./_components/task-answer";
 import { TaskCodeSnippet } from "./_components/task-snippet";
 import { ProgrammingLanguagesForm } from "./_components/programming-language";
-import { LevelForm } from "../../_components/level-form";
+ 
 
 const ChapterIdPage = async ({
   params,

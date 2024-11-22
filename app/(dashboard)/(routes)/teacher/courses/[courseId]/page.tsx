@@ -1,5 +1,4 @@
 import { db } from "@/lib/db";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/authOptions";
@@ -8,13 +7,10 @@ import { PriceForm } from "./_components/price-form";
 import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
 import { CategoryForm } from "./_components/category-form";
-import { ListChecks } from "lucide-react";
 import { AttachementForm } from "./_components/attachment-form";
 import { ChaptersForm } from "./_components/chapters-form";
-import { TypeForm } from "./_components/type-form";
 import { Actions } from "./_components/actions";
-import { DynamicBreadcrumb } from "@/app/(dashboard)/_components/breadcrumbs";
-import { LevelForm } from "./_components/level-form";
+ 
 
 const CourseIdPage = async ({
   params,

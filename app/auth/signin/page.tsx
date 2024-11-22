@@ -5,25 +5,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import login from "@/public/login.jpg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// Define the type for the providers state
 type Provider = {
   id: string;
   name: string;
   type: string;
-  // Add any other properties you expect from the provider object
 };
 
 export default function SignInPage() {
   const [providers, setProviders] = useState<Record<string, Provider> | null>(null);
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProviders = async () => {
       const res = await getProviders();
-      setProviders(res); // Set the providers state
+      setProviders(res);
     };
 
     fetchProviders();
@@ -32,8 +30,19 @@ export default function SignInPage() {
   const handleEmailSignIn = async () => {
     if (email) {
       setIsLoading(true);
-      await signIn("email", { email });
-      setIsLoading(false);
+      setError(null);
+      try {
+        const result = await signIn("email", { email, redirect: false });
+        if (result?.error) {
+          throw new Error(result.error);
+        }
+      } catch (err) {
+        setError("Failed to sign in with email. Please try another method.");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setError("Please enter a valid email.");
     }
   };
 
@@ -44,8 +53,9 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="h-screen bg-gray-200">
-      <div className="absolute left-0 top-0 w-[85%] h-full">
+    <div className="h-screen bg-black flex flex-col md:flex-row">
+      {/* Image section hidden on small screens */}
+      <div className="hidden md:block md:w-[60%] h-full relative">
         <Image
           src={login}
           alt="Sign In"
@@ -54,12 +64,14 @@ export default function SignInPage() {
           className="h-full"
         />
       </div>
-      <div className="absolute right-0 top-0 w-[40%] h-full flex flex-col justify-center items-center bg-black p-10 max-w-lg">
+
+      {/* Form section */}
+      <div className="w-full md:w-[40%] h-full flex flex-col justify-center items-center bg-black p-10 max-w-lg mx-auto">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-4 flex justify-center">
+          <h1 className="text-3xl font-bold text-white mb-4 text-center">
             Sign In
           </h1>
-          <p className="text-sm text-gray-100 mb-4">
+          <p className="text-sm text-gray-100 mb-4 text-center">
             This is your gateway to access a personalized experience tailored
             just for you.
           </p>
@@ -70,7 +82,12 @@ export default function SignInPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Button className="w-full mb-4" onClick={handleEmailSignIn} disabled={isLoading}>
+        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
+        <Button
+          className="w-full mb-4"
+          onClick={handleEmailSignIn}
+          disabled={isLoading}
+        >
           {isLoading ? (
             <div className="flex justify-center items-center">
               <svg

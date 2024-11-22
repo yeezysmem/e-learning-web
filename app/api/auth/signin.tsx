@@ -12,7 +12,7 @@ import type {
     return (
       <div>
         <div>
-          <h1>Sign In</h1>
+          <h1>Sign Insss</h1>
         </div>
         {/* {Object.values(providers).map((provider) => (
           <div key={provider.name}>

@@ -43,15 +43,18 @@ const teacherRoutes = [
   },
 ];
 
-
 export const SidebarRoutes = () => {
   const pathname = usePathname();
   const { data: session } = useSession();
   const isTeacherPage = pathname?.includes("/teacher");
 
+  // Ensure only the teacher with example@gmail.com can see teacherRoutes
+  const routes = session?.user?.email === "yeezysmem@gmail.com" && isTeacherPage 
+    ? teacherRoutes 
+    : guestRoutes;
 
-  const routes = isTeacherPage ? teacherRoutes : guestRoutes;
   const [isLabelVisible, setIsLabelVisible] = useState(true);
+
   return (
     <div>
       {session ? (
@@ -70,14 +73,14 @@ export const SidebarRoutes = () => {
         </div>
       )}
       <div className="mt-16">
-      {routes.map((route) => (
-        <SidebarItem
-          key={route.href}
-          icon={route.icon}
-          label={route.label}
-          href={route.href}
-        />
-      ))}
+        {routes.map((route) => (
+          <SidebarItem
+            key={route.href}
+            icon={route.icon}
+            label={route.label}
+            href={route.href}
+          />
+        ))}
       </div>
     </div>
   );

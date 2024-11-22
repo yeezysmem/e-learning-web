@@ -20,7 +20,7 @@ interface CourseCardProps {
   chapterType: string;
   isSuggestions?: boolean;
   authorId?: string;
-  displayMode?: "dahsboard" | "search";
+  displayMode: "dashboard" | "search";
   level?: string;
 }
 

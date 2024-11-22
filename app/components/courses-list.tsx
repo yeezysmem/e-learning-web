@@ -7,13 +7,13 @@ type CourseWithProgressWithCategory = Course & {
   chapters: { id: string }[];
   progress: number | null;
   chapterType?: string;
-  level?: string;
+  level: string | null;
 
 };
 
 interface CoursesListProps {
   items: CourseWithProgressWithCategory[];
-  displayMode: "dashboard" | "search";
+  displayMode: "dashboard" | "search"; 
 }
 
 export const CoursesList = ({
@@ -31,14 +31,14 @@ export const CoursesList = ({
             title={item.title}
             imageUrl={item.imageUrl!}
             chaptersLength={item.chapters.length}
-            price={displayMode === "search" ? item.price! : undefined}
+            price={displayMode === "search" ? item.price ?? 0 : 0}
             progress={item.progress}
-            category={displayMode === "search" ? item.category?.name! : undefined}
-            description={displayMode === "search" ? item.description! : undefined}
-            chapterType={displayMode === "search" ? item.chapterType! : undefined}
+            category={displayMode === "search" ? item.category?.name! : ""}
+            description={displayMode === "search" ? item.description! : ""}
+            chapterType={displayMode === "search" ? item.chapterType! : ""}
             isSuggestions={false}
             displayMode={displayMode}
-            level={item.level}
+            level={item.level ?? "Unknown"}
           />
         ))}
       </div>

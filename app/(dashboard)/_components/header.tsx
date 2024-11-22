@@ -50,9 +50,9 @@ const Header = () => {
               </li> */}
             {/* ) : null}
             {/* {role === "teacher" ? ( */}
-              <li className=" hover:text-green-400 transition-all cursor-pointer">
+              {/* <li className=" hover:text-green-400 transition-all cursor-pointer">
                 <Link href="/teacher/courses"> Create course </Link>
-              </li>
+              </li> */}
             {/* // ) : null} */}
             {/* {role === "teacher" ? (
               <li className=" hover:text-green-400 transition-all cursor-pointer">

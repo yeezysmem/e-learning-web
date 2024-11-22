@@ -8,35 +8,36 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/authOptions";
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
 import { PrismaClient } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const prisma = new PrismaClient();
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
 
-  // if (!userId) {
-  //   return redirect("/api/auth/signin");
-  // }
+  if (!userId) {
+    return redirect("/api/auth/signin");
+  }
 
   const { completedCourses, coursesInProgress } = await getDashboardCourses(
     userId
   );
 
-  const userProgress = await prisma.userProgress.findFirst({
-    where: {
-      userId: userId,
-    },
-    orderBy: {
-      updatedAt: "desc",
-    },
-    include: {
-      chapter: {
-        include: {
-          course: true,
-        },
-      },
-    },
-  });
+  // const userProgress = await prisma.userProgress.findFirst({
+  //   where: {
+  //     userId: userId,
+  //   },
+  //   orderBy: {
+  //     updatedAt: "desc",
+  //   },
+  //   include: {
+  //     chapter: {
+  //       include: {
+  //         course: true,
+  //       },
+  //     },
+  //   },
+  // });
 
   return (
     <div className="flex h-screen ">
@@ -48,15 +49,15 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
           <div className="flex flex-col lg:flex-row justify-between items-center">
             <div className="flex items-center mb-4 lg:mb-0">
               <Image
-                src={session.user.image || ""}
-                alt={session.user.name || ""}
+                src={session?.user.image || ""}
+                alt={session?.user.name || ""}
                 width={50}
                 height={50}
                 className="rounded-full"
               />
               <div className="ml-4">
                 <h1 className="text-xl font-bold md:text-2xl">
-                  Hi, {session.user.name || "user"} 👋
+                  Hi, {session?.user.name || "user"} 👋
                 </h1>
                 <span className="text-sm text-gray-500">
                   Here are all your purchased courses.
@@ -70,7 +71,7 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
                 </div>
                 <div>
                   <h2 className="text-md font-semibold md:text-xl">
-                    {coursesInProgress.length}
+                    {coursesInProgress ? coursesInProgress.length : 0}
                   </h2>
                   <p className="text-sm text-gray-700">Courses In Progress</p>
                 </div>
@@ -81,7 +82,7 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
                 </div>
                 <div>
                   <h2 className="text-md font-semibold md:text-xl">
-                    {completedCourses.length}
+                    {completedCourses ? completedCourses.length : 0}
                   </h2>
                   <p className="text-sm text-gray-700">Completed Courses</p>
                 </div>
