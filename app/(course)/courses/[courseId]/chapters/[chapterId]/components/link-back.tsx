@@ -24,7 +24,7 @@ const LinkBack = ({ children, href = "/" }: LinkBackProps) => {
           <span className="text-md font-medium">Loading...</span>
         </div>
       ) : (
-        <Link href={href} onClick={handleClick} className="flex items-center gap-2">
+        <Link href={href} onClick={handleClick} className="flex items-center gap-2 ml-8 md:ml-0">
           <MoveLeft className="w-7 h-7" />
           <span className="text-md font-medium">{children}</span>
         </Link>

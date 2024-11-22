@@ -1,7 +1,4 @@
-import { useState } from "react";
-import Header from "./_components/header";
 import { Sidebar } from "./_components/sidebar";
-import { ArrowRightFromLine, ArrowLeftToLine } from "lucide-react";
 import Image from "next/image";
 import { BookOpen, GraduationCap } from "lucide-react";
 import { getServerSession } from "next-auth";
@@ -23,30 +20,22 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
     userId
   );
 
-  // const userProgress = await prisma.userProgress.findFirst({
-  //   where: {
-  //     userId: userId,
-  //   },
-  //   orderBy: {
-  //     updatedAt: "desc",
-  //   },
-  //   include: {
-  //     chapter: {
-  //       include: {
-  //         course: true,
-  //       },
-  //     },
-  //   },
-  // });
-
   return (
-    <div className="flex h-screen ">
-      <aside className="w-48 bg-white md:relative md:top-0 md:left-0">
+    <div className="flex h-screen">
+      {/* Sidebar */}
+      <aside className="hidden md:block w-48 bg-white">
         <Sidebar />
       </aside>
       <main className="flex flex-col flex-grow h-full overflow-auto p-4 bg-gray-100">
-        <div className="bg-white p-6 rounded-lg shadow-sm mb-4">
+        {/* Top Bar (Visible on Mobile) */}
+        <div className="md:hidden bg-white shadow p-4 fixed top-0 left-0 right-0 z-10">
+          <Sidebar />
+        </div>
+
+        {/* Content */}
+        <div className="pt-16 md:pt-0 bg-white p-6 rounded-lg shadow-sm mb-4">
           <div className="flex flex-col lg:flex-row justify-between items-center">
+            {/* User Info */}
             <div className="flex items-center mb-4 lg:mb-0">
               <Image
                 src={session?.user.image || ""}
@@ -56,7 +45,7 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
                 className="rounded-full"
               />
               <div className="ml-4">
-                <h1 className="text-xl font-bold md:text-2xl">
+                <h1 className="text-lg md:text-xl font-bold">
                   Hi, {session?.user.name || "user"} 👋
                 </h1>
                 <span className="text-sm text-gray-500">
@@ -64,6 +53,8 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
                 </span>
               </div>
             </div>
+
+            {/* Course Stats */}
             <div className="grid gap-2 sm:grid-cols-2 w-full lg:w-auto">
               <div className="border p-4 rounded-lg flex items-center">
                 <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
