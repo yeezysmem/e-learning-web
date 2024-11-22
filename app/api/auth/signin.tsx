@@ -4,7 +4,7 @@ import type {
   } from "next"
   import { getProviders, signIn } from "next-auth/react"
   import { getServerSession } from "next-auth/next"
-  import { authOptions } from "./[...nextauth]/route"
+  import { authOptions } from "./authOptions"
   
   export default function SignIn({
     providers,
@@ -12,7 +12,7 @@ import type {
     return (
       <div>
         <div>
-          <h1>Sign In</h1>
+          <h1>Sign Insss</h1>
         </div>
         {/* {Object.values(providers).map((provider) => (
           <div key={provider.name}>

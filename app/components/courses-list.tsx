@@ -6,18 +6,24 @@ type CourseWithProgressWithCategory = Course & {
   category: Category | null;
   chapters: { id: string }[];
   progress: number | null;
+  chapterType?: string;
+  level: string | null;
+
 };
 
 interface CoursesListProps {
   items: CourseWithProgressWithCategory[];
+  displayMode: "dashboard" | "search"; 
 }
 
 export const CoursesList = ({
-  items
+  items,
+  displayMode,
+ 
 }: CoursesListProps) => {
   return (
     <div>
-      <div className="grid mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
+      <div className="grid mt-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
         {items.map((item) => (
           <CourseCard
             key={item.id}
@@ -25,13 +31,14 @@ export const CoursesList = ({
             title={item.title}
             imageUrl={item.imageUrl!}
             chaptersLength={item.chapters.length}
-            // price={item.price!}
+            price={displayMode === "search" ? item.price ?? 0 : 0}
             progress={item.progress}
-            category={item?.category?.name!}
-            // description={item.description!}
-            chapterType={item?.chapterType}
+            category={displayMode === "search" ? item.category?.name! : ""}
+            description={displayMode === "search" ? item.description! : ""}
+            chapterType={displayMode === "search" ? item.chapterType! : ""}
             isSuggestions={false}
-            // authorId={item?.authorId}
+            displayMode={displayMode}
+            level={item.level ?? "Unknown"}
           />
         ))}
       </div>

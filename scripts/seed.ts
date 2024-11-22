@@ -6,10 +6,11 @@ const db = new PrismaClient()
 
 async function main() {
     try {
-        await db.programminLanguage.createMany({
+        await db.levelId.createMany({
             data: [
-                {name: "Python"},
-                {name: "JavaScript"},
+                {name: "Beginner"},
+                {name: "Intermediate"},
+                {name: "Advanced"},
             ]
         });
         console.log("Seeding finished")

@@ -39,7 +39,7 @@ export const CourseEnrollButton = ({
       size="sm"
       className="w-full md:w-auto"
     >
-      Enroll free
+      Enroll for {price}$
     </Button>
   )
 }

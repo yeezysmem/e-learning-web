@@ -34,7 +34,12 @@ export const CategoryItem = ({ label, value }: CategoryItemProps) => {
   return (
     <button
       onClick={onClick}
-      className={cn("py-2 px-3 text-sm border border-slate-200 rounded-full flex items-center gap-x-1 hover:border-sky-700 bg-white transition", isSelected && "border-sky-700 bg-sky-200/20")}
+      className={cn(
+        "py-2 px-3 text-sm border border-black rounded-full flex items-center gap-x-1 bg-white",
+        "transition-colors duration-300 ease-in-out",
+        "hover:bg-purple-700 hover:text-white",
+        isSelected && "text-white bg-[#222]"
+      )}
       type="button"
     >
       <label className="truncate cursor-pointer">{label}</label>

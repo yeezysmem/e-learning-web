@@ -94,8 +94,8 @@ export const TypeForm = ({
                 <FormItem>
                   <FormControl>
                     <Combobox
-                     options={...options} 
-                     {...field} required />
+                     options={options} 
+                     {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

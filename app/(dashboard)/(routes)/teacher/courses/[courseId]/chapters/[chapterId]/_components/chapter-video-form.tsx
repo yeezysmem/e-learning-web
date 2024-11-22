@@ -35,8 +35,7 @@ export const ChapterVideoForm = ({
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const router = useRouter();
-  console.log(initialData);
-
+  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);

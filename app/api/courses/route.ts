@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "../auth/authOptions";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -46,4 +46,4 @@ export async function POST(
         console.log("[COURSES]", error);
         return new NextResponse("Internal Server Error", { status: 500 })
     }
-}
+} 
