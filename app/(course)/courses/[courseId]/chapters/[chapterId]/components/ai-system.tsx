@@ -161,7 +161,7 @@ function AssistantForm({
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:1337/v1/chat/completions",
+        "https://e-learning-web-1j1o.onrender.com/v1/chat/completions",
         {
           model: "gpt-4", // Specify the model to use
           messages: [
@@ -194,7 +194,7 @@ function AssistantForm({
         ? editorRef.current.getValue().trim()
         : "";
       const chatCompletion = await axios.post(
-        "http://localhost:1337/v1/chat/completions",
+        "https://e-learning-web-1j1o.onrender.com/v1/chat/completions",
         {
           messages: [
             {
