@@ -198,6 +198,10 @@ function AssistantForm({
         {
           messages: [
             {
+              "content": "You are a AI assistant for checking code",
+              "role": "system"
+            },
+            {
               role: "user",
               content: `Please evaluate the following code: ${userCode}. 
               Based on these criteria: ${taskCriteria}, assign a grade (0-10). 
