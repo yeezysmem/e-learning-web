@@ -1,17 +1,10 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import React, { ChangeEvent } from "react";
 import axios from "axios";
-import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
-import { FileJson } from "lucide-react";
 import { CircleDashed } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Chapter } from "@prisma/client";
-// import Router from "next/navigation";
-import { OpenAI } from "openai";
-import { Lock } from "lucide-react";
 import PayWarning from "@/public/neetdopay.svg";
 import Image from "next/image";
 import EditorOutput from "./code-output";
@@ -19,12 +12,13 @@ import { FileCode2 } from "lucide-react";
 import { Bot } from "lucide-react";
 import { compileCode } from "@/actions/compile-code";
 import { Play, Zap } from "lucide-react";
-import language from "react-syntax-highlighter/dist/esm/languages/hljs/1c";
 import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import * as monaco from "monaco-editor";
 import parse from "html-react-parser";
+import "monaco-editor/min/vs/editor/editor.main.css";
+
 
 interface AssistantFormProps {
   chapterId: string;
@@ -68,6 +62,7 @@ function AssistantForm({
   const [version, setVersion] = useState<string | null>(null);
   const [test, setTest] = useState("");
   const [prompt, setPrompt] = useState("");
+  const [code, setCode] = useState(codeSnippet);
   const [editorOptions, setEditorOptions] =
     useState<monaco.editor.IStandaloneEditorConstructionOptions>({
       fontSize: 14,
@@ -78,10 +73,14 @@ function AssistantForm({
       scrollBeyondLastLine: false,
     });
 
+
   const [output, setOutput] = useState("");
   const placeholder = codeSnippet;
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
+ const handleEditorChange = (value: string) => {
+    setCode(value); // Оновлення стану при зміні коду
+  };
   function handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor) {
     editorRef.current = editor;
   }
@@ -148,11 +147,7 @@ function AssistantForm({
     }
   }, [selectedLanguage]); // Спрацьовує при зміні мови
 
-  // Функція для зміни обраної мови (це приклад, як ви можете змінювати мову)
-  const handleLanguageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSelectedLanguage(event.target.value);
-  };
-
+ 
   const DynamicEditor = dynamic(() => import("@monaco-editor/react"), {
     ssr: false,
   });
@@ -328,7 +323,7 @@ function AssistantForm({
                 <DynamicEditor
                   height="100%" // The editor will take up 100% of the container's height
                   theme="vs-dark"
-                  defaultLanguage={defaultLanguage}
+                  defaultLanguage={defaultLanguage.toLocaleLowerCase()}
                   defaultValue={placeholder}
                   onMount={handleEditorDidMount}
                   loading="Loading"
@@ -340,12 +335,13 @@ function AssistantForm({
             {/* Другий блок з виводом */}
             <div className="w-full lg:w-1/2 h-[587px]">
               <EditorOutput
-                editorRef={editorRef}
+                editorRef={editorRef} 
                 language={defaultLanguage}
                 handleSendMessage={handleSendMessage}
                 languageVersion={version}
                 userCode={editorRef.current?.getValue()}
                 output={output}
+                 
               />
             </div>
           </div>
