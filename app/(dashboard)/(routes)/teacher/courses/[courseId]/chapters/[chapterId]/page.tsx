@@ -226,7 +226,7 @@ const ChapterIdPage = async ({
                     <IconBadge icon={Code} variant="default" />
                     <h2 className="text-xl font-semibold">Assignment</h2>
                   </div>
-                  {/* <ProgrammingLanguagesForm
+                  <ProgrammingLanguagesForm
                   initialData={chapter}
                   courseId={params.courseId}
                   chapterId={params.chapterId}
@@ -234,7 +234,7 @@ const ChapterIdPage = async ({
                     value: language.name,
                     label: language.id,
                   }))}
-                /> */}
+                />
                   <TaskCriteriaForm
                     initialData={chapter}
                     courseId={params.courseId}
