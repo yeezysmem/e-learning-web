@@ -6,10 +6,10 @@ RUN mkdir -p /app/har_and_cookies /app/generated_images \
     && pip install -U g4f[slim]
 
 # Змінна середовища для порту
-ENV PORT 1337
+EXPOSE 10000
 
 # Відкриття порту
-EXPOSE 1337
+ENV PORT 10000
 
 # Запуск сервера без додаткових аргументів
 CMD ["bash", "-c", "python -m g4f.cli api --gui --debug"]
