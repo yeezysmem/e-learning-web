@@ -9,6 +9,7 @@ interface EditorOutputProps {
   languageVersion: string | null;
   userCode: string | undefined;
   output: string;
+  
 }
 
 const EditorOutput: React.FC<EditorOutputProps> = ({
