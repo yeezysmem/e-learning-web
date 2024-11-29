@@ -191,7 +191,7 @@ function AssistantForm({
     try {
       setLoading(true);
       const userCode = editorRef.current ? editorRef.current.getValue().trim() : "";
-      const response = await axios.post(
+      const chatCompletion = await axios.post(
         "https://e-learning-web-1j1o.onrender.com/v1/chat/completions",
         {
           model: "gpt-4", // Specify the correct model
@@ -213,8 +213,8 @@ function AssistantForm({
         }
       );
   
-      const chatResponse = response.data.choices[0].message.content;
-      setResponseText(chatResponse);
+      const response = chatCompletion.data.choices[0].message.content;
+      setResponseText(response);
   
 
       const gradeMatch = response.match(/Grade:\s*(\d+)/);
