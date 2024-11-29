@@ -8,8 +8,8 @@ RUN mkdir -p /app/har_and_cookies /app/generated_images \
 # Змінна середовища для порту
 ENV PORT 1337
 
-# Відкриття порту (додатково, хоча Render автоматично відкриває порт)
+# Відкриття порту
 EXPOSE 1337
 
-# Запуск з використанням змінної PORT
-CMD ["bash", "-c", "python -m g4f.cli api --gui --debug --host 0.0.0.0 --port ${PORT}"]
+# Запуск сервера без додаткових аргументів
+CMD ["bash", "-c", "python -m g4f.cli api --gui --debug"]
