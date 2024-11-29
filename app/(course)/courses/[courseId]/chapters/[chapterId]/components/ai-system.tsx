@@ -190,31 +190,32 @@ function AssistantForm({
   async function handleSendMessage() {
     try {
       setLoading(true);
-      const userCode = editorRef.current
-        ? editorRef.current.getValue().trim()
-        : "";
-      const chatCompletion = await axios.post(
+      const userCode = editorRef.current ? editorRef.current.getValue().trim() : "";
+      const response = await axios.post(
         "https://e-learning-web-1j1o.onrender.com/v1/chat/completions",
         {
+          model: "gpt-4", // Specify the correct model
           messages: [
             {
-              "content": "You are a AI assistant for checking code",
-              "role": "system"
+              role: "system",
+              content: "You are an AI assistant for checking code."
             },
             {
               role: "user",
-              content: `Please evaluate the following code: ${userCode}. 
-              Based on these criteria: ${taskCriteria}, assign a grade (0-10). 
-              If it does not meet the criteria, assign a score of 0. 
-              Please start your response with "Grade:" and provide a brief explanation and without code reference.`,
+              content: `Please evaluate the following code: ${userCode}. Based on these criteria: ${taskCriteria}, assign a grade (0-10). If it does not meet the criteria, assign a score of 0. Please start your response with "Grade:" and provide a brief explanation and without code reference.`
             },
           ],
-          model: "gpt-3.5-turbo",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
-
-      const response = chatCompletion.data.choices[0].message.content;
-      setResponseText(response);
+  
+      const chatResponse = response.data.choices[0].message.content;
+      setResponseText(chatResponse);
+  
 
       const gradeMatch = response.match(/Grade:\s*(\d+)/);
       const intGrade = gradeMatch ? parseInt(gradeMatch[1]) : null;
