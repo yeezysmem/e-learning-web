@@ -44,10 +44,21 @@ const CourseLayout = async ({
       },
     },
   });
-
+  
   if (!course) {
     return redirect("/");
   }
+
+  const purchase = await db.purchase.findUnique({
+    where: {
+      userId_courseId: {
+        userId,
+        courseId: course.id,
+      },
+    },
+  });
+
+  
 
   const progressCount = await getProgress(userId, course.id);
 
@@ -57,7 +68,7 @@ const CourseLayout = async ({
         <CourseNavbar course={course} progressCount={progressCount} />
       </div>
       <div className=" md:flex h-full w-80 flex-col fixed inset-y-0 z-20 mt-1.5 ml-1.5">
-        <CourseSidebar course={course} progressCount={progressCount} />
+        <CourseSidebar course={course} progressCount={progressCount} isPurchased={purchase} />
       </div>
       <main className="md:pl-80 inset-y-0 h-full m-1.5 ml-2.5 z-50 mt-0">
         {children}

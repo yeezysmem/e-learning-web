@@ -19,7 +19,7 @@ interface CourseSidebarProps {
     }[];
   };
   progressCount: number;
-  isPurchased: boolean;
+  isPurchased: any;
 }
 
 export const CourseSidebar = ({
