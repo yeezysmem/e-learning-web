@@ -10,10 +10,7 @@ import { VideoComponent } from "./components/video-component";
 import { CourseEnrollButton } from "./components/enroll-button";
 import { CourseProgressButton } from "./components/course-progress-button";
 import AssistantForm from "./components/ai-system";
-import Image from "next/image";
-import Loading from "../../loading";
-import { Suspense } from "react";
-import { getProgress } from "@/actions/get-progress";
+import parse from "html-react-parser";
 
 const ChapterIdPage = async ({
   params,
@@ -22,8 +19,9 @@ const ChapterIdPage = async ({
 }) => {
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
+
   if (!userId) {
-    return redirect("/");
+    redirect("/"); // Редирект для неавторизованих користувачів
   }
 
   const {
@@ -41,7 +39,7 @@ const ChapterIdPage = async ({
   });
 
   if (!chapter || !course) {
-    return redirect("/");
+    redirect("/"); // Редирект, якщо дані не знайдено
   }
 
   // const code = ReactHtmlParser(chapter.description);
@@ -63,24 +61,6 @@ const ChapterIdPage = async ({
         />
       )}
       <div className="flex flex-col mb-20 bg-white">
-        {chapter.videoUrl ? (
-          // <Suspense fallback={<Loading />}>
-            <div className="p-4">
-              <VideoComponent
-                chapterId={params.chapterId}
-                title={chapter.title}
-                courseId={params.courseId}
-                nextChapterId={nextChapter?.id}
-                playbackId={
-                  muxData?.playbackId! ||
-                  "N34KJa4XH7vl6erxTiFTLOaX4LPcxFFo7W6Diphzlsc"
-                }
-                isLocked={isLocked}
-                completeOnEnd={completeOnEnd}
-              />
-            </div>
-          // </Suspense>
-        ) : null}
         <div className="border rounded-md">
           <div className="p-4 flex bg-white flex-col md:flex-row items-center justify-between rounded-t-md ">
             <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
@@ -123,16 +103,12 @@ const ChapterIdPage = async ({
               <pre className="font-bold pl-4 pt-4 uppercase">
                 Chapter Description
               </pre>
-              <p
-                className="quill px-4 pt-2 pb-4 text-sm"
-                dangerouslySetInnerHTML={{ __html: chapter.description || "" }}
-              ></p>
+              <div className="p-4 pt-2">{parse(chapter.description || "")}</div>
             </div>
 
             <div className="mt-8 quill px-4">
               {chapter.chapterType === "Exam" && (
                 <div>
-                  
                   <AssistantForm
                     chapterId={chapter.id}
                     taskCriteria={chapter.taskCriteria || ""}
@@ -146,7 +122,8 @@ const ChapterIdPage = async ({
                     codeSnippet={chapter.codeSnippet || ""}
                     isCompleted={!!userProgress?.isCompleted}
                     languageVersion={chapter?.languageVersion || ""}
-                    chapterImage={chapter?.imageUrl || ""}                  />
+                    chapterImage={chapter?.imageUrl || ""}
+                  />
                 </div>
               )}
             </div>

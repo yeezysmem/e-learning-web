@@ -27,31 +27,29 @@ export async function CourseNavbar({
   course,
   progressCount,
 }: CourseNavbarProps) {
-  
   const session = await getServerSession(authOptions);
   const userImage = session?.user?.image || "";
   const userName = session?.user?.name || "";
   const [firstName, lastName] = userName.split(" ");
 
-
-
   return (
     <div className="p-5 border h-full flex items-center justify-between bg-white shadow-sm rounded-md">
-     
-     <LinkBack href="/" >Back</LinkBack>
-     <div className="flex items-center gap-2">
-     <div>
-     <p className="text-sm font-medium float-right">{firstName}</p>
-     <p className="text-sm font-medium">{lastName}</p>
-     </div>
-      <Image className="rounded-md" src={userImage} width={37} height={37} alt="avatar" />
-
-     </div>
-      {/* <CourseMobileSidebar
-        course={course}
-        progressCount={progressCount}
-      /> */}
-      {/* <NavbarRoutes />       */}
+      <div className="hidden md:block">
+        <LinkBack href="/">Back</LinkBack>
+      </div>
+      <div className="flex items-center gap-2 ml-auto">
+        <div className="text-right">
+          <p className="text-sm font-medium">{firstName}</p>
+          <p className="text-sm font-medium">{lastName}</p>
+        </div>
+        <Image
+          className="rounded-md"
+          src={userImage}
+          width={37}
+          height={37}
+          alt="avatar"
+        />
+      </div>
     </div>
   );
 }

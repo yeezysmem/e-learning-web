@@ -24,6 +24,7 @@ import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import * as monaco from "monaco-editor";
+import parse from "html-react-parser";
 
 interface AssistantFormProps {
   chapterId: string;
@@ -268,7 +269,7 @@ function AssistantForm({
       {!isLocked && (
         <div>
           <div className="flex-1 gap-y4">
-            <div className="relative p-4 bg-white rounded-md h-96 w-full mb-8">
+            {/* <div className="relative p-4 bg-white rounded-md h-96 w-full mb-8">
               <div className="relative w-full h-full rounded-md overflow-hidden">
                 <Image
                   src={chapterImage}
@@ -277,16 +278,17 @@ function AssistantForm({
                   className="absolute inset-0 object-contain"
                 />
               </div>
-            </div>
+            </div> */}
             <div className="p-4 bg-gray-50 border border-gray-300 rounded-md">
               <pre className="font-bold uppercase">Task description</pre>
-              <div
+              {/* <div
                 className="text-md pt-2 pb-2"
                 dangerouslySetInnerHTML={{ __html: taskDescription }}
-              />
+              /> */}
+              {parse(taskDescription)}
             </div>
           </div>
-          <div className="flex flex-col items-start sm:flex-row gap-2  mt-6 justify-between">
+          <div className="flex flex-row items-start  gap-2  mt-6 justify-between">
             <div className="flex gap-2">
               <FileCode2 className="w-7 h-7" />
               <h1 className="text-lg font-bold lg:text-xl">Practical part</h1>

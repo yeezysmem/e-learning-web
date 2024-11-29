@@ -33,37 +33,14 @@ const Header = () => {
         </div>
         <nav>
           <ul className="flex justify-center items-center gap-8 p-4">
-            {/* {role === "user" ? ( */}
-              <li className=" hover:text-green-400 transition-all cursor-pointer">
-                <Link href="/"> Dashboard </Link>
-              </li>
-            {/* ) : null} */}
-              <li className=" hover:text-green-400 transition-all cursor-pointer">
-                <Link href="/search"> Search </Link>
-              </li>
-              {/* <li className=" hover:text-green-400 transition-all cursor-pointer">
-                <SendButton userId={user?.id} newRole={"teacher"} />
-              </li> */}
-            {/* {role === "user" ? ( */} 
-              {/* <li className=" hover:text-green-400 transition-all cursor-pointer">
-                <SendButton userId={user?.id} newRole={"teacher"} />
-              </li> */}
-            {/* ) : null}
-            {/* {role === "teacher" ? ( */}
-              {/* <li className=" hover:text-green-400 transition-all cursor-pointer">
-                <Link href="/teacher/courses"> Create course </Link>
-              </li> */}
-            {/* // ) : null} */}
-            {/* {role === "teacher" ? (
-              <li className=" hover:text-green-400 transition-all cursor-pointer">
-                <Link href="/teacher/analytics"> Analytics </Link>
-              </li>
-            ) : null}
-            {role === "teacher" ? (
-              <li className=" hover:text-green-400 transition-all cursor-pointer">
-                <SendButton userId={user?.id} newRole={"user"} />
-              </li>
-            ) : null} */}
+            <li className=" hover:text-green-400 transition-all cursor-pointer">
+              <Link href="/"> Dashboard </Link>
+            </li>
+
+            <li className=" hover:text-green-400 transition-all cursor-pointer">
+              <Link href="/search"> Search </Link>
+            </li>
+
             <li>
               {session ? (
                 <div className="flex justify-between cursor-pointer items-center gap-2">
@@ -84,9 +61,6 @@ const Header = () => {
                       className="text-white"
                     />
                   </div>
-                  {/* <button className="pl-5" onClick={() => signOut()}>
-                    <span className="text-white text-sm">Sign out</span>
-                  </button> */}
                 </div>
               ) : (
                 <button

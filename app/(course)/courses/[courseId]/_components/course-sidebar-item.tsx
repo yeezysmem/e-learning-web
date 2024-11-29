@@ -39,12 +39,11 @@ export const CourseSidebarItem = ({
       className={cn(
         "flex items-center gap-x-2 text-main text-sm font-[500] pl-6 transition-all hover:text-purple-600 hover:bg-purple-300/20",
         isActive &&
-          "text-main bg-purple-200/20 hover:bg-purple-200/20 hover:text-purple-700",
-        isCompleted && "text-emerald-700 hover:text-emerald-700",
-        isCompleted && isActive && "bg-green-200"
+          "text-main bg-purple-200/20 hover:bg-purple-200/20 hover:text-purple-700", // Active styles
+        isCompleted && "text-emerald-700 hover:text-emerald-700", // Completed styles
+        isCompleted && isActive && "bg-green-200" // Completed and active styles
       )}
     >
-      
       <div className="flex items-center gap-x-2 py-4 ml-0">
         <Icon
           size={18}
@@ -58,9 +57,9 @@ export const CourseSidebarItem = ({
       </div>
       <div
         className={cn(
-          "ml-auto opacity-0 border-2 border-main h-full transition-all",
-          isActive && "opacity-100",
-          isCompleted && "border-emerald-700"
+          "ml-auto opacity-0  h-full transition-all",
+          isActive && "opacity-100 border-animate", // Trigger animation when active
+          isCompleted && "border-emerald" // Use emerald color if completed
         )}
       />
     </button>

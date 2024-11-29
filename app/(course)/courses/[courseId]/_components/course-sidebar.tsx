@@ -1,64 +1,87 @@
-import { Chapter, Course, UserProgress } from "@prisma/client";
-import { redirect } from "next/navigation";
+"use client";
 
-import { db } from "@/lib/db";
+import { useState } from "react";
+import { X, AlignJustify } from "lucide-react";
 import { CourseProgress } from "@/app/components/course-progress";
-
 import { CourseSidebarItem } from "./course-sidebar-item";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/authOptions";
+import LinkBack from "../chapters/[chapterId]/components/link-back";
+
 interface CourseSidebarProps {
-  course: Course & {
-    chapters: (Chapter & {
-      userProgress: UserProgress[] | null;
-    })[];
+  course: {
+    title: string;
+    id: string;
+    chapters: {
+      id: string;
+      title: string;
+      isFree: boolean;
+      chapterType?: string | null;
+      userProgress: { isCompleted: boolean }[] | null;
+    }[];
   };
   progressCount: number;
+  isPurchased: boolean;
 }
 
-export const CourseSidebar = async ({
+export const CourseSidebar = ({
   course,
   progressCount,
+  isPurchased,
 }: CourseSidebarProps) => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
+  const [isOpen, setIsOpen] = useState(false);
 
-  if (!userId) {
-    return redirect("/");
-  }
-
-  const purchase = await db.purchase.findUnique({
-    where: {
-      userId_courseId: {
-        userId,
-        courseId: course.id,
-      },
-    },
-  });
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
-    <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm border rounded-md">
-      <div className="p-6 flex flex-col border-b bg-white">
-        <h1 className="font-semibold text-2xl">{course.title}</h1>
-        {purchase && (
-          <div className="mt-5">
-            <CourseProgress variant="success" value={progressCount} />
-          </div>
-        )}
+    <>
+      {/* Mobile Toggle Button */}
+      <button
+        className="p-2 fixed top-4 left-4 z-20 bg-gray-200 rounded-md md:hidden"
+        onClick={toggleSidebar}
+      >
+        {isOpen ? <X /> : <AlignJustify />}
+      </button>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 left-0 h-full w-full p-8 bg-white shadow-lg z-10 transform transition-transform duration-300 md:relative md:p-0 md:w-78 md:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="block md:hidden">
+        <LinkBack href="/">Back</LinkBack>
+        </div>
+        <div className="p-6 border-b">
+          <h1 className="font-semibold text-2xl">{course.title}</h1>
+          {isPurchased && (
+            <div className="mt-4">
+              <CourseProgress variant="success" value={progressCount} />
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col overflow-y-auto">
+          {course.chapters.map((chapter) => (
+            <CourseSidebarItem
+              key={chapter.id}
+              id={chapter.id}
+              label={chapter.title}
+              isCompleted={!!chapter.userProgress?.[0]?.isCompleted}
+              courseId={course.id}
+              isLocked={!chapter.isFree && !isPurchased}
+              chapterType={chapter.chapterType || ""}
+            />
+          ))}
+        </div>
       </div>
-      <div className="flex flex-col w-full">
-        {course.chapters.map((chapter) => (
-          <CourseSidebarItem
-            key={chapter.id}
-            id={chapter.id}
-            label={chapter.title}
-            isCompleted={!!chapter.userProgress?.[0]?.isCompleted}
-            courseId={course.id}
-            isLocked={!chapter.isFree && !purchase}
-            chapterType={chapter.chapterType || ""}
-          />
-        ))}
-      </div>
-    </div>
+
+      {/* Overlay for Mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50  md:hidden"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+    </>
   );
 };
