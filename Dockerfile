@@ -12,4 +12,4 @@ EXPOSE 10000
 ENV PORT 10000
 
 # Запуск сервера з використанням PORT
-CMD ["bash", "-c", "python -m g4f.cli api --gui --debug --host 0.0.0.0 --port ${PORT}"]
+CMD ["bash", "-c", "python -m g4f.cli api  --port ${PORT}"]
