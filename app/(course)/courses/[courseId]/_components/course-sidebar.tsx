@@ -4,6 +4,7 @@ import { useState } from "react";
 import { X, AlignJustify } from "lucide-react";
 import { CourseProgress } from "@/app/components/course-progress";
 import { CourseSidebarItem } from "./course-sidebar-item";
+import LinkBack from "../chapters/[chapterId]/components/link-back";
 
 interface CourseSidebarProps {
   course: {
@@ -48,6 +49,9 @@ export const CourseSidebar = ({
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
+        <div className="block md:hidden">
+        <LinkBack href="/">Back</LinkBack>
+        </div>
         <div className="p-6 border-b">
           <h1 className="font-semibold text-2xl">{course.title}</h1>
           {isPurchased && (
@@ -74,7 +78,7 @@ export const CourseSidebar = ({
       {/* Overlay for Mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-5 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50  md:hidden"
           onClick={toggleSidebar}
         ></div>
       )}

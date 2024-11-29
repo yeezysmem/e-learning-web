@@ -26,15 +26,15 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
       <aside className="hidden md:block w-48 bg-white">
         <Sidebar />
       </aside>
-      <main className="flex flex-col flex-grow h-full overflow-auto p-4 bg-gray-100">
+      <main className="flex flex-col flex-grow min-h-full overflow-y-auto p-2 md:p-4 bg-gray-100">
         {/* Top Bar (Visible on Mobile) */}
-        <div className="md:hidden bg-white shadow p-4 fixed top-0 left-0 right-0 z-10">
+        <div className="md:hidden bg-white shadow  fixed top-0 left-0 right-0 z-10">
           <Sidebar />
         </div>
 
         {/* Content */}
-        <div className="pt-16 md:pt-0 bg-white p-6 rounded-lg shadow-sm mb-4">
-          <div className="flex flex-col lg:flex-row justify-between items-center">
+        <div className="md:pt-0 bg-white  rounded-lg shadow-sm mb-2">
+          <div className="p-4 flex flex-col lg:flex-row justify-between items-center">
             {/* User Info */}
             <div className="flex items-center mb-4 lg:mb-0">
               <Image
@@ -42,7 +42,7 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
                 alt={session?.user.name || ""}
                 width={50}
                 height={50}
-                className="rounded-full"
+                className="rounded-full object-cover"
               />
               <div className="ml-4">
                 <h1 className="text-lg md:text-xl font-bold">

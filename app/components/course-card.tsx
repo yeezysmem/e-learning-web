@@ -52,7 +52,7 @@ export const CourseCard = ({
         )}
       >
         {/* Зображення курсу */}
-        <div className="relative w-full aspect-video overflow-hidden">
+        <div className="relative w-full aspect-video">
           <Image
             fill
             priority={true}
@@ -90,7 +90,7 @@ export const CourseCard = ({
         </div>
         {displayMode === "search" && (
           <div className="mt-4">
-            <button className="w-full py-2 bg-black text-white rounded-md hover:bg-gray-900 transition-colors duration-300 ease-in-out">
+            <button className="w-full py-2 text-sm sm:text-base bg-black text-white rounded-md hover:bg-gray-900 transition-colors duration-300 ease-in-out">
               {price === 0 ? (
                 <span className="flex items-center justify-center gap-x-3">
                   <del className="text-xs">19.99 $</del>Free

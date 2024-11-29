@@ -40,7 +40,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
   });
 
   return (
-    <div className="p-6 bg-white min-h-screen  border rounded-md">
+    <div className="p-6 bg-white min-h-full border rounded-md overflow-y-auto">
       <div>
         <h1 className="mb-5 mt-10 text-2xl font-bold text-black flex justify-center">
           Explore new courses
