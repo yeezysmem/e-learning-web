@@ -18,7 +18,11 @@ import remarkGfm from "remark-gfm";
 import * as monaco from "monaco-editor";
 import parse from "html-react-parser";
 import "monaco-editor/min/vs/editor/editor.main.css";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
+import { faRocket } from "@fortawesome/free-solid-svg-icons";
+import { faCircleDown } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 interface AssistantFormProps {
   chapterId: string;
@@ -73,12 +77,11 @@ function AssistantForm({
       scrollBeyondLastLine: false,
     });
 
-
   const [output, setOutput] = useState("");
   const placeholder = codeSnippet;
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
- const handleEditorChange = (value: string) => {
+  const handleEditorChange = (value: string) => {
     setCode(value); // Оновлення стану при зміні коду
   };
   function handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor) {
@@ -147,7 +150,6 @@ function AssistantForm({
     }
   }, [selectedLanguage]); // Спрацьовує при зміні мови
 
- 
   const DynamicEditor = dynamic(() => import("@monaco-editor/react"), {
     ssr: false,
   });
@@ -185,7 +187,9 @@ function AssistantForm({
   async function handleSendMessage() {
     try {
       setLoading(true);
-      const userCode = editorRef.current ? editorRef.current.getValue().trim() : "";
+      const userCode = editorRef.current
+        ? editorRef.current.getValue().trim()
+        : "";
       const chatCompletion = await axios.post(
         "https://e-learning-web-1j1o.onrender.com/v1/chat/completions",
         {
@@ -193,11 +197,11 @@ function AssistantForm({
           messages: [
             {
               role: "system",
-              content: "You are an AI assistant for checking code."
+              content: "You are an AI assistant for checking code.",
             },
             {
               role: "user",
-              content: `Please evaluate the following code: ${userCode}. Based on these criteria: ${taskCriteria}, assign a grade (0-10). If it does not meet the criteria, assign a score of 0. Please start your response with "Grade:" and provide a brief explanation and without code reference.`
+              content: `Please evaluate the following code: ${userCode}. Based on these criteria: ${taskCriteria}, assign a grade (0-10). If it does not meet the criteria, assign a score of 0. Please start your response with "Grade:" and provide a brief explanation and without code reference.`,
             },
           ],
         },
@@ -207,10 +211,9 @@ function AssistantForm({
           },
         }
       );
-  
+
       const response = chatCompletion.data.choices[0].message.content;
       setResponseText(response);
-  
 
       const gradeMatch = response.match(/Grade:\s*(\d+)/);
       const intGrade = gradeMatch ? parseInt(gradeMatch[1]) : null;
@@ -269,22 +272,9 @@ function AssistantForm({
       {!isLocked && (
         <div>
           <div className="flex-1 gap-y4">
-            {/* <div className="relative p-4 bg-white rounded-md h-96 w-full mb-8">
-              <div className="relative w-full h-full rounded-md overflow-hidden">
-                <Image
-                  src={chapterImage}
-                  alt="chapter image"
-                  fill // Забезпечує, що зображення заповнює контейнер // Вписує зображення в контейнер, зберігаючи його пропорції
-                  className="absolute inset-0 object-contain"
-                />
-              </div>
-            </div> */}
             <div className="p-4 bg-gray-50 border border-gray-300 rounded-md">
               <pre className="font-bold uppercase">Task description</pre>
-              {/* <div
-                className="text-md pt-2 pb-2"
-                dangerouslySetInnerHTML={{ __html: taskDescription }}
-              /> */}
+
               {parse(taskDescription)}
             </div>
           </div>
@@ -296,23 +286,23 @@ function AssistantForm({
             <div className="flex items-center gap-3 my-4">
               <Button
                 onClick={executeCode}
-                className="bg-purple-600 hover:bg-purple-800"
+                className="flex items-center justify-center px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800 relative"
               >
-                <Play size={15} />
-                <span className="pl-1">Run Code</span>
+                <FontAwesomeIcon icon={faCirclePlay} />
+                <span className="pl-4">Run Code</span>
               </Button>
-              <Button
-                onClick={handleSendMessage}
-                // className="bg-green-600 hover:bg-green-800"
-              >
-                <Zap />
-                <span className="pl-1 text-sm">Sumbit</span>
-              </Button>
-              {/* <Button onClick={getRuntimes}>getRuntimes</Button> */}
+              <Link href="#ai">
+                <Button
+                  className="flex items-center justify-center px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 relative"
+                  onClick={handleSendMessage}
+                >
+                  <FontAwesomeIcon icon={faCircleDown} />
+                  <span className="pl-4">{loading ? "Processing..." : "Submit Code"}</span>
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="flex flex-col lg:flex-row items-center gap-2">
-            {/* Перший блок редактора */}
             <div className="bg-[#1E1E1E] rounded-md w-full lg:w-1/2 h-[587px] flex flex-col">
               <div className="bg-black p-2 rounded-t-md">
                 <span className="text-white text-md p-2">
@@ -332,98 +322,65 @@ function AssistantForm({
               </div>
             </div>
 
-            {/* Другий блок з виводом */}
             <div className="w-full lg:w-1/2 h-[587px]">
               <EditorOutput
-                editorRef={editorRef} 
+                editorRef={editorRef}
                 language={defaultLanguage}
                 handleSendMessage={handleSendMessage}
                 languageVersion={version}
                 userCode={editorRef.current?.getValue()}
                 output={output}
-                 
               />
             </div>
           </div>
 
-          <div className="grid pb-5">
+          <div className="grid pb-5" id="ai">
             <div className="flex items-center justify-center p-3"></div>
-            <div>
-              <div className="max-h-180 overflow-y-auto bg-black border border-gray-300 p-4 rounded-md">
-                {displayedText ? (
-                  <pre className="whitespace-pre-wrap break-words text-green-500">
-                    <div className="flex items-center justify-between pb-4">
-                      <div className="flex items-center gap-2">
-                        <Bot className="w-8 h-8" />
-                        <h1 className="text-xl font-bold">AI Response</h1>
-                        {loading && (
-                          <CircleDashed
-                            size={30}
-                            className="animate-spin text-green-500"
-                          />
-                        )}
-                      </div>
-                      <Button onClick={handleSendDetails}>Get Details</Button>
-                    </div>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {displayedText}
-                    </ReactMarkdown>
-                  </pre>
-                ) : (
-                  <div className="text-sm text-green-300 flex items-center gap-2 justify-between">
-                    <div className="flex items-center gap-x-2">
-                      <span className="relative inline-flex items-center justify-center h-5 w-5">
-                        {/* <span className="absolute inset-0 animate-pulse rounded-full bg-green-300 z-10"></span> */}
-                        <Bot className="w-6 h-6 relative z-20 animate-pulse" />
-                      </span>
-                      <span className="animate-pulse">
-                        I&apos;m waiting for your solution
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-              {/* {displayedText ? (
-                <div>
-                  <div className="p-4 my-4 text-md bg-green-50 border border-green-200 rounded-md">
-                    <p className="text-md font-bold pb-2">
-                      Detailed Information:
-                    </p>
-                    {datailes ? (
-                      datailes.split("\n").map((line, index) => (
-                        <p key={index}>
-                          {line.includes("```") ? (
-                            <pre>
-                              <code>{line.replace(/```/g, "")}</code>
-                            </pre>
-                          ) : (
-                            line
-                          )}
-                        </p>
-                      ))
-                    ) : (
-                      <p>You don't have</p>
-                    )}
+            <div className="max-h-180 overflow-y-auto bg-black border border-gray-300 p-4 rounded-md">
+              {loading ? (
+                <div className="text-sm text-green-300 flex items-center gap-2 justify-between">
+                  <div className="flex items-center gap-x-2">
+                    <span className="relative inline-flex items-center justify-center h-5 w-5">
+                      <Bot className="w-6 h-6 relative z-20 animate-spin" />
+                    </span>
+                    <span className="animate-pulse">
+                      Please wait, your request is being processed...
+                    </span>
                   </div>
                 </div>
-              ) : (
-                ""
-              )} */}
-              {explanation ? (
-                <div className="flex flex-col justify-center p-2 mt-2">
-                  <p className="text-xs font-bold pb-1">Your last result</p>
-
-                  <ReactMarkdown
-                    className="text-xs"
-                    remarkPlugins={[remarkGfm]}
-                  >
-                    {explanation}
+              ) : displayedText ? (
+                <pre className="whitespace-pre-wrap break-words text-green-500">
+                  <div className="flex items-center justify-between pb-4">
+                    <div className="flex items-center gap-2">
+                      <Bot className="w-8 h-8" />
+                      <h1 className="text-xl font-bold">AI Response</h1>
+                    </div>
+                  </div>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {displayedText}
                   </ReactMarkdown>
-                </div>
+                </pre>
               ) : (
-                ""
+                <div className="text-sm text-green-300 flex items-center gap-2 justify-between">
+                  <div className="flex items-center gap-x-2">
+                    <span className="relative inline-flex items-center justify-center h-5 w-5">
+                      <Bot className="w-6 h-6 relative z-20 animate-pulse" />
+                    </span>
+                    <span className="animate-pulse">
+                      I&apos;m waiting for your solution
+                    </span>
+                  </div>
+                </div>
               )}
             </div>
+            {explanation && (
+              <div className="flex flex-col justify-center p-2 mt-2">
+                <p className="text-xs font-bold pb-1">Your last result</p>
+                <ReactMarkdown className="text-xs" remarkPlugins={[remarkGfm]}>
+                  {explanation}
+                </ReactMarkdown>
+              </div>
+            )}
           </div>
         </div>
       )}

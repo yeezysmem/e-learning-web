@@ -22,6 +22,7 @@ interface CourseCardProps {
   authorId?: string;
   displayMode: "dashboard" | "search";
   level?: string;
+  // isPurchased: boolean;
 }
 
 export const CourseCard = ({
@@ -38,7 +39,8 @@ export const CourseCard = ({
   authorId,
   displayMode,
   level,
-}: CourseCardProps) => {
+}: // isPurchased,
+CourseCardProps) => {
   return (
     <Link href={`/courses/${id}`}>
       <div

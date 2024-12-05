@@ -14,12 +14,13 @@ type CourseWithProgressWithCategory = Course & {
 interface CoursesListProps {
   items: CourseWithProgressWithCategory[];
   displayMode: "dashboard" | "search"; 
+  // purchasedCourses: string[];
 }
 
 export const CoursesList = ({
   items,
   displayMode,
- 
+  // purchasedCourses
 }: CoursesListProps) => {
   return (
     <div>
@@ -39,6 +40,7 @@ export const CoursesList = ({
             isSuggestions={false}
             displayMode={displayMode}
             level={item.level ?? "Unknown"}
+            // isPurchased={purchasedCourses.includes(item.id)} 
           />
         ))}
       </div>
