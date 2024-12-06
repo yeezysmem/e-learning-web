@@ -23,18 +23,18 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <aside className="hidden md:block w-48 bg-white">
+      <aside className="hidden md:block w-48 border bg-white rounded-lg shadow-sm ">
         <Sidebar />
       </aside>
       <main className="flex flex-col flex-grow min-h-full overflow-y-auto p-2 md:p-4 bg-gray-100">
         {/* Top Bar (Visible on Mobile) */}
-        <div className="md:hidden bg-white shadow  fixed top-0 left-0 right-0 z-10">
+        <div className="md:hidden bg-white shadow mt-4 rounded-lg fixed top-0 left-0 right-0 z-10">
           <Sidebar />
         </div>
 
         {/* Content */}
         <div className="md:pt-0 bg-white  rounded-lg shadow-sm mb-2">
-          <div className="p-4 flex flex-col lg:flex-row justify-between items-center">
+          <div className="p-4 flex flex-col border rounded-lg  lg:flex-row justify-between items-center">
             {/* User Info */}
             <div className="flex items-center mb-4 lg:mb-0">
               <Image

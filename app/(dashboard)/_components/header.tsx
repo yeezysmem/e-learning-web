@@ -26,8 +26,8 @@ const Header = () => {
   };
 
   return (
-    <header>
-      <div className="container flex justify-center items-center ">
+    <header className="border">
+      <div className="container flex  justify-center items-center ">
         <div className="mr-auto flex items-center">
           <Image src={logo} width={80} height={80} alt="logo" />
         </div>

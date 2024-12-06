@@ -35,7 +35,6 @@ export const CourseSidebar = ({
 
   return (
     <>
-      {/* Mobile Toggle Button */}
       <button
         className="p-2 fixed top-4 left-4 z-20 bg-gray-200 rounded-md md:hidden"
         onClick={toggleSidebar}
@@ -43,7 +42,6 @@ export const CourseSidebar = ({
         {isOpen ? <X /> : <AlignJustify />}
       </button>
 
-      {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-full w-full p-8 bg-white shadow-lg z-10 transform transition-transform duration-300 md:relative md:p-0 md:w-78 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -75,7 +73,6 @@ export const CourseSidebar = ({
         </div>
       </div>
 
-      {/* Overlay for Mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50  md:hidden"

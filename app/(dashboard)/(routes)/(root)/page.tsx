@@ -44,12 +44,12 @@ export default async function Dashboard() {
   const lastUpdatedCourse = userProgress?.chapter?.course;
 
   return (
-    <div className="pt-0 space-y-1.5 min-h-screen">
-      <div className="bg-white p-6 rounded-lg shadow-sm">
+    <div className="pt-0 space-y-1.5  min-h-screen">
+      <div className="bg-white border p-6 rounded-lg shadow-sm">
         <h1 className="text-lg font-semibold">Your Courses</h1>
         <CoursesList items={[...coursesInProgress, ...completedCourses]} displayMode="dashboard" />
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-sm text-center">
+      <div className="bg-white border p-6 rounded-lg shadow-sm text-center">
         <p className="text-xs text-gray-500 md:text-sm">Looking for more courses?</p>
         <Link href="/search" className="text-black font-semibold text-sm md:text-md">
           Explore new courses
