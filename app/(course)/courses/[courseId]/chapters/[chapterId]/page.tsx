@@ -11,6 +11,7 @@ import { CourseEnrollButton } from "./components/enroll-button";
 import { CourseProgressButton } from "./components/course-progress-button";
 import AssistantForm from "./components/ai-system";
 import parse from "html-react-parser";
+import BannerController from "./components/banner-conroller";
 
 const ChapterIdPage = async ({
   params,
@@ -42,24 +43,10 @@ const ChapterIdPage = async ({
     redirect("/"); // Редирект, якщо дані не знайдено
   }
 
-  // const code = ReactHtmlParser(chapter.description);
   const isLocked = !chapter.isFree && !purchase;
-  const completeOnEnd = !!purchase && !userProgress?.isCompleted;
-  // const taskDescription = chapter.taskDescription;
-  // const codeString = "(num) => num + 1";
-  // const progressCount = await getProgress(userId, course.id);
-
   return (
     <div>
-      {userProgress?.isCompleted && (
-        <Banner variant="success" label="You already completed this chapter." />
-      )}
-      {isLocked && (
-        <Banner
-          variant="warning"
-          label="You need to purchase this course to watch this chapter."
-        />
-      )}
+       <BannerController userProgress={userProgress} isLocked={isLocked} />
       <div className="flex flex-col mb-20 bg-white">
         <div className="border rounded-md">
           <div className="p-4 flex bg-white flex-col md:flex-row items-center justify-between rounded-t-md ">
