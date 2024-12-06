@@ -23,6 +23,8 @@ import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import { faCircleDown } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
+
 
 interface AssistantFormProps {
   chapterId: string;
@@ -67,11 +69,12 @@ function AssistantForm({
   const [test, setTest] = useState("");
   const [prompt, setPrompt] = useState("");
   const [code, setCode] = useState(codeSnippet);
+  const [codeIde, setCodeIde] = useState("")
   const [editorOptions, setEditorOptions] =
     useState<monaco.editor.IStandaloneEditorConstructionOptions>({
       fontSize: 14,
       fontFamily: "Fira Code, monospace",
-      lineNumbers: "on" as monaco.editor.LineNumbersType, // Type assertion to ensure it's compatible
+      lineNumbers: "on" as monaco.editor.LineNumbersType, 
       minimap: { enabled: false },
       automaticLayout: true,
       scrollBeyondLastLine: false,
@@ -81,41 +84,44 @@ function AssistantForm({
   const placeholder = codeSnippet;
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
-  const handleEditorChange = (value: string) => {
-    setCode(value); // Оновлення стану при зміні коду
+  const handleEditorChange = (value: string | undefined) => {
+    if (value !== undefined) {
+      setCode(value); // Synchronize the state with editor content
+    }
   };
+
+  
   function handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor) {
     editorRef.current = editor;
   }
 
   useEffect(() => {
     if (responseText) {
-      printTextGradually(responseText, 100); // Adjusted speed for word output
+      printTextGradually(responseText, 100); 
     }
   }, [responseText]);
 
-  // Function to print text gradually by words
   function printTextGradually(fullText: string, speed: number) {
-    const words = fullText.split(" "); // Split the text into words
+    const words = fullText.split(" "); 
     let index = 0;
-    setDisplayedText(""); // Clear before new text
+    setDisplayedText(""); 
 
     const interval = setInterval(() => {
       if (index < words.length) {
         setDisplayedText((prev) => prev + (prev ? " " : "") + words[index]); // Add one word, prepend space if necessary
         index++;
       } else {
-        clearInterval(interval); // Stop when all words are displayed
+        clearInterval(interval); 
       }
     }, speed);
 
-    // Cleanup function to clear the interval when the component unmounts
+
     return () => clearInterval(interval);
   }
   useEffect(() => {
-    const savedCode = localStorage.getItem("userCode"); // or sessionStorage.getItem('userCode')
+    const savedCode = localStorage.getItem("userCode"); 
     if (savedCode && editorRef.current) {
-      editorRef.current.setValue(savedCode); // Set the value back to the editor
+      editorRef.current.setValue(savedCode); 
     }
   }, []);
 
@@ -125,11 +131,7 @@ function AssistantForm({
         const response = await axios.get(
           "https://emkc.org/api/v2/piston/runtimes"
         );
-
-        // Дані з API
         const runtimes = response.data;
-
-        // Знайти версію для обраної мови
         const selectedVersion = runtimes.find(
           (runtime: { language: string }) =>
             runtime.language.toLowerCase() === selectedLanguage.toLowerCase()
@@ -148,7 +150,7 @@ function AssistantForm({
     if (selectedLanguage) {
       getRuntimes();
     }
-  }, [selectedLanguage]); // Спрацьовує при зміні мови
+  }, [selectedLanguage]); 
 
   const DynamicEditor = dynamic(() => import("@monaco-editor/react"), {
     ssr: false,
@@ -310,12 +312,14 @@ function AssistantForm({
                 </span>
               </div>
               <div className="flex-1 pt-4">
-                <DynamicEditor
+                <Editor
                   height="100%" // The editor will take up 100% of the container's height
                   theme="vs-dark"
                   defaultLanguage={defaultLanguage.toLocaleLowerCase()}
-                  defaultValue={placeholder}
+                  defaultValue={code}
+                  // value={codeIde}
                   onMount={handleEditorDidMount}
+                  onChange={handleEditorChange}
                   loading="Loading"
                   options={editorOptions}
                 />
