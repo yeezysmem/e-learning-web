@@ -23,7 +23,7 @@ SkillUp is an advanced online education platform focused on programming and soft
 
 What sets SkillUp apart is its integrated AI Mentor system backed by RAG (Retrieval-Augmented Generation). The AI analyzes student code solutions in real-time, cross-references task criteria and context, and provides automated, context-aware grading, hints, and detailed explanations.
 
-<img src="./public/main-page.png" alt="SkillUp Dashboard" width="auto" height="auto">
+<img src="./public/github-bg.png" alt="SkillUp Dashboard" width="auto" height="auto">
 
 ### Built With
 
