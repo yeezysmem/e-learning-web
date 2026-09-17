@@ -12,6 +12,9 @@
     "prettier:fix": "prettier app --write",
     "format-code": "npm run prettier:fix & npm run lint:fix"
   },
+  "prisma": {
+    "seed": "node scripts/seed.ts"
+  },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.1",
@@ -76,6 +79,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.48.2",
     "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.7.0",
     "react-loading-skeleton": "^3.4.0",
     "react-markdown": "^9.0.1",
     "react-monaco-editor": "^0.55.0",

@@ -1,14 +1,16 @@
 import { Sidebar } from "./_components/sidebar";
 import Image from "next/image";
-import { BookOpen, GraduationCap } from "lucide-react";
+import { BookOpen, GraduationCap, User } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/authOptions";
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
-import { PrismaClient } from "@prisma/client";
 import { redirect } from "next/navigation";
 
-async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const prisma = new PrismaClient();
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
 
@@ -21,70 +23,72 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <aside className="hidden md:block w-48 border bg-white rounded-lg shadow-sm ">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      <aside className="hidden md:flex flex-col w-64 border-r bg-white z-20">
         <Sidebar />
       </aside>
-      <main className="flex flex-col flex-grow min-h-full overflow-y-auto p-2 md:p-4 bg-gray-100">
-        {/* Top Bar (Visible on Mobile) */}
-        <div className="md:hidden bg-white shadow mt-4 rounded-lg fixed top-0 left-0 right-0 z-10">
+      <main className="flex-1 flex flex-col h-full overflow-y-auto p-4 md:p-6 space-y-6">
+        <div className="md:hidden bg-white border-b p-3 rounded-xl shadow-sm fixed top-0 left-0 right-0 z-30 flex items-center justify-between">
           <Sidebar />
         </div>
-
-        {/* Content */}
-        <div className="md:pt-0 bg-white  rounded-lg shadow-sm mb-2">
-          <div className="p-4 flex flex-col border rounded-lg  lg:flex-row justify-between items-center">
-            {/* User Info */}
-            <div className="flex items-center mb-4 lg:mb-0">
-              <Image
-                src={session?.user.image || ""}
-                alt={session?.user.name || ""}
-                width={50}
-                height={50}
-                className="rounded-full object-cover"
-              />
-              <div className="ml-4">
-                <h1 className="text-lg md:text-xl font-bold">
-                  Hi, {session?.user.name || "user"} 👋
+        <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mt-12 md:mt-0">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="flex items-center gap-x-4">
+              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-purple-500 shadow-sm bg-gray-100 flex items-center justify-center shrink-0">
+                {session?.user?.image ? (
+                  <Image
+                    src={session.user.image}
+                    alt={session.user.name || "User"}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <User className="w-7 h-7 text-gray-400" />
+                )}
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">
+                  Welcome back, {session?.user?.name || "Student"}! 👋
                 </h1>
-                <span className="text-sm text-gray-500">
-                  Here are all your purchased courses.
-                </span>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Track your learning progress and manage your enrolled courses.
+                </p>
               </div>
             </div>
-
-            {/* Course Stats */}
-            <div className="grid gap-2 sm:grid-cols-2 w-full lg:w-auto">
-              <div className="border p-4 rounded-lg flex items-center">
-                <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                  <GraduationCap className="text-main w-6 h-6" />
+            <div className="grid grid-cols-2 gap-3 w-full lg:w-auto">
+              <div className="bg-purple-50/50 border border-purple-100 p-3.5 rounded-xl flex items-center gap-x-3 min-w-[170px]">
+                <div className="w-10 h-10 rounded-lg bg-purple-600 text-white flex items-center justify-center shadow-sm shrink-0">
+                  <GraduationCap className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-md font-semibold md:text-xl">
+                  <span className="text-lg font-bold text-gray-900 block leading-none">
                     {coursesInProgress ? coursesInProgress.length : 0}
-                  </h2>
-                  <p className="text-sm text-gray-700">Courses In Progress</p>
+                  </span>
+                  <span className="text-xs text-purple-700 font-medium">
+                    In Progress
+                  </span>
                 </div>
               </div>
-              <div className="border p-4 rounded-lg flex items-center">
-                <div className="bg-green-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                  <BookOpen className="text-green-600 w-6 h-6" />
+              <div className="bg-emerald-50/50 border border-emerald-100 p-3.5 rounded-xl flex items-center gap-x-3 min-w-[170px]">
+                <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center shadow-sm shrink-0">
+                  <BookOpen className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-md font-semibold md:text-xl">
+                  <span className="text-lg font-bold text-gray-900 block leading-none">
                     {completedCourses ? completedCourses.length : 0}
-                  </h2>
-                  <p className="text-sm text-gray-700">Completed Courses</p>
+                  </span>
+                  <span className="text-xs text-emerald-700 font-medium">
+                    Completed
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {children}
+
+        {/* Dynamic Content Page */}
+        <div className="flex-1">{children}</div>
       </main>
     </div>
   );
 }
-
-export default DashboardLayout;

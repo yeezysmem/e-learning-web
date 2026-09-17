@@ -11,7 +11,7 @@ interface CourseSidebarItemProps {
   isCompleted: boolean;
   courseId: string;
   isLocked: boolean;
-  chapterType: string;
+  chapterType?: string;
 }
 
 export const CourseSidebarItem = ({
@@ -20,7 +20,6 @@ export const CourseSidebarItem = ({
   isCompleted,
   courseId,
   isLocked,
-  chapterType,
 }: CourseSidebarItemProps) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -37,29 +36,31 @@ export const CourseSidebarItem = ({
       onClick={onClick}
       type="button"
       className={cn(
-        "flex items-center gap-x-2 text-black text-sm font-[500] pl-6 transition-all hover:bg-gray-300/20",
-        isActive &&
-          "text-main bg-purple-200/20 hover:bg-purple-200/20 hover:text-purple-700", // Active styles
-        isCompleted && "text-emerald-700 hover:text-emerald-700", // Completed styles
-        isCompleted && isActive && "bg-green-200" // Completed and active styles
+        "flex items-center gap-x-3 text-gray-600 text-xs font-semibold px-4 py-3.5 w-full transition-all duration-200 relative group rounded-lg my-0.5",
+        "hover:bg-gray-100 hover:text-gray-900",
+        isActive && "bg-purple-50 text-purple-700 hover:bg-purple-50 hover:text-purple-700 font-bold",
+        isCompleted && "text-emerald-800 hover:text-emerald-900",
+        isCompleted && isActive && "bg-emerald-50/80 text-emerald-900"
       )}
     >
-      <div className="flex items-center gap-x-2 py-4 ml-0">
+      <div className="flex items-center gap-x-2.5 min-w-0 flex-1">
         <Icon
-          size={18}
+          size={16}
           className={cn(
-            "text-black",
-            isActive && "text-main",
-            isCompleted && "text-emerald-700"
+            "text-gray-400 shrink-0 transition-colors group-hover:text-gray-700",
+            isActive && "text-purple-600 group-hover:text-purple-600",
+            isCompleted && "text-emerald-600 group-hover:text-emerald-600",
+            isLocked && "text-gray-400"
           )}
         />
-        <span className="text-xs text-left">{label}</span>
+        <span className="truncate text-left leading-tight">{label}</span>
       </div>
+
       <div
         className={cn(
-          "ml-auto opacity-0  h-full transition-all",
-          isActive && "opacity-100 border-animate", // Trigger animation when active
-          isCompleted && "border-emerald" // Use emerald color if completed
+          "absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-l-full bg-transparent transition-all duration-200 opacity-0",
+          isActive && "bg-purple-600 opacity-100",
+          isCompleted && isActive && "bg-emerald-600"
         )}
       />
     </button>

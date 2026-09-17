@@ -4,7 +4,7 @@ import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Pencil } from "lucide-react";
+import { Pencil, FileText, Loader2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -26,27 +26,26 @@ interface TaskDescriptionProps {
   initialData: Chapter;
   courseId: string;
   chapterId: string;
-};
+}
 
 const formSchema = z.object({
-  taskDescription: z.string().min(1),
+  taskDescription: z.string().min(1, { message: "Task description is required" }),
 });
 
 export const TaskDescription = ({
   initialData,
   courseId,
-  chapterId
+  chapterId,
 }: TaskDescriptionProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
-
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      taskDescription: initialData?.taskDescription || ""
+      taskDescription: initialData?.taskDescription || "",
     },
   });
 
@@ -54,74 +53,93 @@ export const TaskDescription = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
-      toast.success("Chapter updated");
+      await axios.patch(
+        `/api/courses/${courseId}/chapters/${chapterId}`,
+        values
+      );
+      toast.success("Task description updated");
       toggleEdit();
       router.refresh();
     } catch {
       toast.error("Something went wrong");
     }
-  }
+  };
 
   return (
-    <div className="mt-6 border bg-white rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-       <span className="font-bold"> Task description</span>
-        <Button onClick={toggleEdit} variant="ghost">
+    <div className="mt-6 border border-gray-200 bg-white rounded-xl p-5 shadow-sm space-y-3">
+      {/* Header */}
+      <div className="font-bold flex items-center justify-between text-gray-900 text-sm">
+        <div className="flex items-center gap-x-2">
+          <FileText className="w-4 h-4 text-purple-600" />
+          <span>Task Description</span>
+        </div>
+
+        <Button
+          onClick={toggleEdit}
+          variant="ghost"
+          size="sm"
+          className="text-xs font-semibold hover:bg-gray-100 rounded-lg"
+        >
           {isEditing ? (
-            <>Cancel</>
+            "Cancel"
           ) : (
             <>
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit description
+              <Pencil className="h-3.5 w-3.5 mr-1.5" />
+              Edit Description
             </>
           )}
         </Button>
       </div>
+
+      {/* Read View */}
       {!isEditing && (
-        <div className={cn(
-          "text-sm mt-2",
-          !initialData.taskDescription && "text-slate-500 italic"
-        )}>
+        <div
+          className={cn(
+            "text-xs pt-1 text-gray-700",
+            !initialData.taskDescription && "text-gray-400 italic font-normal"
+          )}
+        >
           {!initialData.taskDescription && "Describe your task here..."}
           {initialData.taskDescription && (
-            <Preview
-              value={initialData.taskDescription}
-            />
+            <Preview value={initialData.taskDescription} />
           )}
         </div>
       )}
+
+      {/* Edit Form */}
       {isEditing && (
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
             <FormField
               control={form.control}
               name="taskDescription"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Editor
-                      {...field}
-                    />
+                    <Editor {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs text-rose-500" />
                 </FormItem>
               )}
             />
+
             <div className="flex items-center gap-x-2">
               <Button
                 disabled={!isValid || isSubmitting}
                 type="submit"
+                size="sm"
+                className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-4 py-2 rounded-lg"
               >
-                Save
+                {isSubmitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Save Description"
+                )}
               </Button>
             </div>
           </form>
         </Form>
       )}
     </div>
-  )
-}
+  );
+};
