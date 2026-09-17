@@ -5,28 +5,14 @@ import exam from "@/public/exam.svg";
 import lectures from "@/public/lectures.svg";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useState } from "react";
-
-import * as z from "zod";
-
-import { Chapter } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 interface ChapterCardProps {
   courseId: string;
   chapterId: string;
-   
-   
 }
- 
 
-const ChapterCard = ({
-  courseId,
-  chapterId,
-}: //   image,
-ChapterCardProps) => {
-   
-
+const ChapterCard = ({ courseId, chapterId }: ChapterCardProps) => {
   const router = useRouter();
 
   const onFinalExam = async () => {
@@ -58,40 +44,62 @@ ChapterCardProps) => {
   };
 
   return (
-    <div className="flex gap-6 mt-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      {/* Practical Task Card */}
       <div
-        className="bg-[#fff] rounded-md cursor-pointer border border-[#000]"
         onClick={onFinalExam}
+        className="group bg-white rounded-xl cursor-pointer border border-gray-200 overflow-hidden shadow-sm hover:shadow-md hover:border-purple-300 transition-all flex flex-col justify-between"
       >
-        <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
-          <Image src={exam} width={270} height={250} alt="FinalExam" />
+        <div className="flex items-center justify-center p-8 bg-purple-50/40">
+          <Image
+            src={exam}
+            width={220}
+            height={200}
+            alt="Practical Task"
+            className="transition-transform group-hover:scale-105"
+          />
         </div>
-        <div className="bg-[#000] p-4 rounded-b-md">
-          <h1 className="text-lg font-semibold text-white">Practical task</h1>
-          <p className="text-[#fff] pt-4">
-            This chapter type is a crucial component of our platform,
-            bridging the gap between theoretical learning and practical
-            application, and helping students achieve a higher level of
-            proficiency in coding.
-          </p>
+        <div className="p-6 bg-white border-t border-gray-100 flex-1 flex flex-col justify-between">
+          <div>
+            <h2 className="text-base font-bold text-gray-900 group-hover:text-purple-600 transition-colors">
+              Practical Task / Exam
+            </h2>
+            <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+              This chapter type bridges the gap between theoretical learning and practical application, helping students achieve proficiency in coding tasks.
+            </p>
+          </div>
+          <span className="inline-block mt-4 text-xs font-semibold text-purple-600 group-hover:underline">
+            Select Practical Task &rarr;
+          </span>
         </div>
       </div>
 
+      {/* Lectures Card */}
       <div
-        className="bg-[#fff] rounded-md cursor-pointer border border-[#000]"
         onClick={onLectures}
+        className="group bg-white rounded-xl cursor-pointer border border-gray-200 overflow-hidden shadow-sm hover:shadow-md hover:border-purple-300 transition-all flex flex-col justify-between"
       >
-        <div className="grid items-center justify-center pl-6 pt-6 pr-6 ">
-          <Image src={lectures} width={270} height={260} alt="asdasd" />
+        <div className="flex items-center justify-center p-8 bg-sky-50/40">
+          <Image
+            src={lectures}
+            width={220}
+            height={200}
+            alt="Lectures"
+            className="transition-transform group-hover:scale-105"
+          />
         </div>
-        <div className="bg-[#000] p-4 rounded-b-md">
-          <h1 className="text-lg font-semibold text-white">Lectures</h1>
-          <p className="text-[#fff] pt-4">
-            The Lectures chapter type is essential for delivering high-quality,
-            structured educational content. It combines the benefits of
-            traditional lecture-based learning with the flexibility and
-            interactivity of an online platform
-          </p>
+        <div className="p-6 bg-white border-t border-gray-100 flex-1 flex flex-col justify-between">
+          <div>
+            <h2 className="text-base font-bold text-gray-900 group-hover:text-sky-600 transition-colors">
+              Lectures & Resources
+            </h2>
+            <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+              Essential for delivering structured educational content, combining traditional lecture-based learning with the flexibility of an online platform.
+            </p>
+          </div>
+          <span className="inline-block mt-4 text-xs font-semibold text-sky-600 group-hover:underline">
+            Select Lectures &rarr;
+          </span>
         </div>
       </div>
     </div>

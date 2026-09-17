@@ -4,7 +4,7 @@ import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Pencil } from "lucide-react";
+import { Pencil, CircleDollarSign, Loader2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -19,31 +19,29 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { formatPrice } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 interface PriceFormProps {
   initialData: Course;
   courseId: string;
-};
+}
 
 const formSchema = z.object({
   price: z.coerce.number().min(0, {
-    message: "Price is required",
-  })
+    message: "Price must be at least 0",
+  }),
 });
 
-export const PriceForm = ({
-  initialData,
-  courseId
-}: PriceFormProps) => {
+export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
-
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {price: initialData?.price || undefined},
+    defaultValues: { price: initialData?.price ?? undefined },
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -51,40 +49,59 @@ export const PriceForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course updated");
+      toast.success("Course price updated");
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Failed to update price");
     }
-  }
+  };
 
   return (
-    <div className="mt-6 border bg-white rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        <span className="font-bold">Course price</span>
-        <Button onClick={toggleEdit} variant="ghost">
+    <div className="mt-6 border border-gray-200 bg-white rounded-xl p-5 shadow-sm space-y-3">
+      {/* Header */}
+      <div className="font-bold flex items-center justify-between text-gray-900 text-sm">
+        <div className="flex items-center gap-x-2">
+          <span>Course Price</span>
+        </div>
+
+        <Button
+          onClick={toggleEdit}
+          variant="ghost"
+          size="sm"
+          className="text-xs font-semibold hover:bg-gray-100 rounded-lg"
+        >
           {isEditing ? (
-            <>Cancel</>
+            "Cancel"
           ) : (
             <>
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit 
+              <Pencil className="h-3.5 w-3.5 mr-1.5" />
+              Edit
             </>
           )}
         </Button>
       </div>
+
+      {/* Read View */}
       {!isEditing && (
-        <p className="text-sm mt-2">
-          $ {initialData.price}
+        <p
+          className={cn(
+            "text-xs font-semibold text-gray-800 pt-1",
+            initialData.price === null && "text-gray-400 italic font-normal"
+          )}
+        >
+          {initialData.price !== null
+            ? initialData.price === 0
+              ? "Free"
+              : formatPrice(initialData.price)
+            : "No price set yet."}
         </p>
       )}
+
+      {/* Edit Form */}
       {isEditing && (
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
             <FormField
               control={form.control}
               name="price"
@@ -92,29 +109,36 @@ export const PriceForm = ({
                 <FormItem>
                   <FormControl>
                     <Input
+                      type="number"
+                      step="0.01"
                       disabled={isSubmitting}
-                      placeholder="$ 0.00"
+                      placeholder="Set a price for your course (0 for free)"
+                      className="text-xs rounded-lg border-gray-200 focus-visible:ring-purple-600"
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs text-rose-500" />
                 </FormItem>
               )}
             />
-            <div className="grid items-center gap-2">
-              <span className="text-sm text-gray-500">
-                Price must be at least 0
-              </span>
+
+            <div className="flex items-center gap-x-2">
               <Button
                 disabled={!isValid || isSubmitting}
                 type="submit"
+                size="sm"
+                className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-4 py-2 rounded-lg"
               >
-                Save
+                {isSubmitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Save Price"
+                )}
               </Button>
             </div>
           </form>
         </Form>
       )}
     </div>
-  )
-}
+  );
+};

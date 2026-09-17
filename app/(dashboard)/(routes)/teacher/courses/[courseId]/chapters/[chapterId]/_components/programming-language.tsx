@@ -4,13 +4,11 @@ import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Pencil } from "lucide-react";
+import { Pencil, Code, Loader2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Chapter } from "@prisma/client";
-import clsx, { ClassValue }  from "clsx";
-import {ReverseCombobox} from "@/components/ui/reverseCombobox";
 
 import {
   Form,
@@ -19,20 +17,19 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ReverseCombobox } from "@/components/ui/reverseCombobox";
 import { cn } from "@/lib/utils";
-import { Combobox } from "@/components/ui/combobox";
 
 interface ProgrammingLanguagesFormProps {
   initialData: Chapter;
   courseId: string;
   chapterId: string;
   options: { label: string; value: string }[];
-};
+}
 
 const formSchema = z.object({
-  programmingLanguageId: z.string().min(1),
+  programmingLanguageId: z.string().min(1, { message: "Language is required" }),
 });
 
 export const ProgrammingLanguagesForm = ({
@@ -44,69 +41,102 @@ export const ProgrammingLanguagesForm = ({
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
-
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { programmingLanguageId: initialData?.programmingLanguageId || "" },
+    defaultValues: {
+      programmingLanguageId: initialData?.programmingLanguageId || "",
+    },
   });
 
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
-      toast.success("Course updated");
+      await axios.patch(
+        `/api/courses/${courseId}/chapters/${chapterId}`,
+        values
+      );
+      toast.success("Programming language updated");
       toggleEdit();
       router.refresh();
     } catch {
-      // toast.error("Something went wrong");
+      toast.error("Something went wrong");
     }
   };
 
-  const selectedOption = options.find((option) => option.value === initialData.programmingLanguageId);
-  
+  const selectedOption = options.find(
+    (option) => option.value === initialData.programmingLanguageId
+  );
 
   return (
-    <div className="mt-6 border bg-white rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        <span className="font-bold">Programming language</span>
-        <Button onClick={toggleEdit} variant="ghost">
+    <div className="mt-6 border border-gray-200 bg-white rounded-xl p-5 shadow-sm space-y-3">
+      {/* Header */}
+      <div className="font-bold flex items-center justify-between text-gray-900 text-sm">
+        <div className="flex items-center gap-x-2">
+          <Code className="w-4 h-4 text-purple-600" />
+          <span>Programming Language</span>
+        </div>
+
+        <Button
+          onClick={toggleEdit}
+          variant="ghost"
+          size="sm"
+          className="text-xs font-semibold hover:bg-gray-100 rounded-lg"
+        >
           {isEditing ? (
-            <>Cancel</>
+            "Cancel"
           ) : (
             <>
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit 
+              <Pencil className="h-3.5 w-3.5 mr-1.5" />
+              Edit Language
             </>
           )}
         </Button>
       </div>
-      {!isEditing && <p className={clsx("text-sm mt-2", !initialData.programmingLanguageId && "text-slate-500 italic")}>{selectedOption?.value || "No Programming languages"}</p>}
+
+      {/* Read View */}
+      {!isEditing && (
+        <p
+          className={cn(
+            "text-xs font-semibold text-gray-800 pt-1",
+            !initialData.programmingLanguageId && "text-gray-400 italic font-normal"
+          )}
+        >
+          {selectedOption?.label || selectedOption?.value || "No programming language selected"}
+        </p>
+      )}
+
+      {/* Edit Form */}
       {isEditing && (
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
             <FormField
               control={form.control}
               name="programmingLanguageId"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <ReverseCombobox
-                     options={options} 
-                     {...field} />
+                    <ReverseCombobox options={options} {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs text-rose-500" />
                 </FormItem>
               )}
             />
+
             <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
-                Save
+              <Button
+                disabled={!isValid || isSubmitting}
+                type="submit"
+                size="sm"
+                className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-4 py-2 rounded-lg"
+              >
+                {isSubmitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Save Language"
+                )}
               </Button>
             </div>
           </form>

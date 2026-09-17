@@ -3,7 +3,7 @@
 import { LucideIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React from "react";
 
 interface SidebarItemProps {
   icon: LucideIcon;
@@ -12,15 +12,8 @@ interface SidebarItemProps {
 }
 
 export const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
-  const [isLabelVisible, setIsLabelVisible] = useState(true);
-  const [isAction, setIsAction] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-
-  const handleHide = () => {
-    setIsLabelVisible(!isLabelVisible); // Перемикає видимість лейбла
-    setIsAction(!isAction); // Змінює стиль кнопки при натисканні
-  };
 
   const isActive =
     (pathname === "/" && href === "/") ||
@@ -36,17 +29,26 @@ export const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
       onClick={handleClick}
       type="button"
       className={cn(
-        "flex w-full text-[#222] text-sm transition-all duration-400 hover:bg-gray-200 rounded-2xl mt-4 font-medium pr-3",
-        isActive && "text-white bg-black hover:bg-gray-900"
+        "flex items-center gap-x-2 w-full text-sm font-medium transition-all text-gray-500 rounded-xl px-3 py-2.5 hover:text-gray-900 hover:bg-gray-100/80",
+        isActive &&
+          "text-purple-700 bg-purple-50 hover:bg-purple-100 hover:text-purple-800 font-semibold"
       )}
     >
-      <span className="flex items-center justify-center gap-x-2 py-3 px-3">
+      <div className="flex items-center gap-x-3">
         <Icon
-          size={22}
-          className={cn("text-black", isActive && "text-white")}
+          size={20}
+          className={cn(
+            "text-gray-500 transition-colors",
+            isActive && "text-purple-700"
+          )}
         />
-        {isLabelVisible && label}
-      </span>
+        <span className="truncate">{label}</span>
+      </div>
+
+      {/* Активний індикатор смужки справа (опціонально для сучасного UI) */}
+      {isActive && (
+        <div className="ml-auto w-1.5 h-5 bg-purple-700 rounded-full" />
+      )}
     </button>
   );
 };

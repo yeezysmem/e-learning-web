@@ -1,70 +1,62 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Book,
-  Eye,
-  Clapperboard,
-  LayoutDashboard,
-  Paperclip,
-} from "lucide-react";
-// import CodeMirror from "@uiw/react-codemirror";
-import { db } from "@/lib/db";
-import { IconBadge } from "@/components/icon-badge";
-import { Banner } from "@/components/banner";
-import { CaseSensitive } from "lucide-react";
-import typeone from "../../../../../../../../../public/typeone.svg";
+import { ArrowLeft } from "lucide-react";
 import { getServerSession } from "next-auth";
-import Logo from "../../../../../../../../../public/assets/icons/logo.svg";
-import Image from "next/image";
+
+import { db } from "@/lib/db";
 import { authOptions } from "@/app/api/auth/authOptions";
-import { Button } from "@/components/ui/button";
-import typetwo from "../../../../../../../../../public/typetwo.svg";
-import typethree from "../../../../../../../../../public/typethree.svg";
 import ChapterCard from "./_components/chapterCard";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { toast } from "react-hot-toast";
-import { z } from "zod";
 
 interface ChapterTypeProps {
   params: {
     courseId: string;
     chapterId: string;
-    typeId: string;
-    chapter: {
-      id: string;
-      name: string;
-      description: string;
-    };
   };
 }
-const formSchema = z.object({
-  price: z.coerce.number().min(30, {
-    message: "Price is required",
-  }),
-});
 
-const ChapterType = async ({
-  params,
-}: {
-  params: { courseId: string; chapterId: string; typeId: string };
-}) => {
-  const { courseId, chapterId, typeId } = params;
+const ChapterType = async ({ params }: ChapterTypeProps) => {
+  const { courseId, chapterId } = params;
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
+
   if (!userId) {
     return redirect("/");
   }
 
+  const chapter = await db.chapter.findUnique({
+    where: {
+      id: chapterId,
+      courseId: courseId,
+    },
+  });
+
+  if (!chapter) {
+    return redirect(`/teacher/courses/${courseId}`);
+  }
+
   return (
-    <div className="h-[100vh] m-1.5 rounded-md border bg-gray-100">
-      <span className="bg-black text-white flex rounded-t-md px-4 text-xs p-1">
-        Course creation: choose chapter type
-      </span>
-      <div className="container">
-        <h1 className="text-xl font-bold mt-10">Choose Chapter Type</h1>
-        <ChapterCard courseId={params.courseId} chapterId={params.chapterId} />
+    <div className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm min-h-full space-y-6">
+      {/* Header Bar */}
+      <div className="space-y-4 pb-4 border-b">
+        <Link
+          href={`/teacher/courses/${courseId}`}
+          className="inline-flex items-center text-xs font-semibold text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <ArrowLeft className="h-3.5 w-3.5 mr-1.5" />
+          Back to course setup
+        </Link>
+
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Choose Chapter Type</h1>
+          <p className="text-xs text-gray-500 mt-1">
+            Select how you want to deliver content for this chapter (Lectures, Exams, or Challenges)
+          </p>
+        </div>
+      </div>
+
+      {/* Chapter Type Selection Cards Component */}
+      <div className="pt-2">
+        <ChapterCard courseId={courseId} chapterId={chapterId} />
       </div>
     </div>
   );

@@ -1,29 +1,15 @@
 "use client";
 
-import * as z from "zod";
 import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Pencil } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Chapter } from "@prisma/client";
-import { useRef, useEffect } from "react";
-import * as monaco from 'monaco-editor';
+import * as monaco from "monaco-editor";
+import Editor from "@monaco-editor/react";
+import { Code2, Loader2, Save } from "lucide-react";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-// import { Editor } from "@/components/editor";
-import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
-
 
 interface TaskCodeSnippetProps {
   initialData: Chapter;
@@ -32,19 +18,15 @@ interface TaskCodeSnippetProps {
   defaultLanguage: string;
 }
 
-const formSchema = z.object({
-  codeSnippet: z.string().min(1),
-});
-
 export const TaskCodeSnippet = ({
   initialData,
   courseId,
   chapterId,
   defaultLanguage,
 }: TaskCodeSnippetProps) => {
-
-
+  const [isLoading, setIsLoading] = useState(false);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+  const router = useRouter();
 
   function handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor) {
     editorRef.current = editor;
@@ -52,42 +34,70 @@ export const TaskCodeSnippet = ({
 
   async function handleSendSnippet() {
     try {
+      setIsLoading(true);
       const codeSnippet = editorRef.current?.getValue();
 
       await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {
         codeSnippet,
       });
 
-      toast.success("Your snippet has been submitted");
-      // router.reload();
-    } catch (error) {
-      // console.error("Error sending snippet:", error);
-      // toast.error("Something went wrong");
-    } 
+      toast.success("Code snippet updated successfully");
+      router.refresh();
+    } catch {
+      toast.error("Failed to save code snippet");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
-    <div className="mt-6 border bg-white rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        <div className="font-bold">
-          {defaultLanguage ? (
-            <span>{defaultLanguage} snippet</span>
-          ) : (
-            <span>Choose programming language</span>
-          )}
+    <div className="mt-6 border border-gray-200 bg-white rounded-xl p-5 shadow-sm space-y-4">
+      {/* Header */}
+      <div className="font-bold flex items-center justify-between text-gray-900 text-sm">
+        <div className="flex items-center gap-x-2">
+          <Code2 className="w-4 h-4 text-purple-600" />
+          <span>
+            {defaultLanguage
+              ? `${defaultLanguage} Code Snippet`
+              : "Code Snippet (Select language first)"}
+          </span>
         </div>
       </div>
-      <div className="pt-4">
-        <div className="bg-[#222222] p-2 rounded-md"><Editor
-          height="20vh"
-          width="100%"
-          defaultLanguage={defaultLanguage}
-          defaultValue={initialData?.codeSnippet || "//"}
-          theme="vs-dark"
-          onMount={handleEditorDidMount}
-        /></div>
-        <div className="grid items-center pt-2">
-        <Button onClick={handleSendSnippet}>Sumbit</Button>
+
+      {/* Editor Box */}
+      <div className="space-y-3 pt-1">
+        <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+          <Editor
+            height="220px"
+            width="100%"
+            defaultLanguage={defaultLanguage?.toLowerCase() || "javascript"}
+            defaultValue={initialData?.codeSnippet || "// Write your initial code snippet here..."}
+            theme="vs-dark"
+            onMount={handleEditorDidMount}
+            options={{
+              minimap: { enabled: false },
+              fontSize: 12,
+              scrollBeyondLastLine: false,
+            }}
+          />
+        </div>
+
+        <div className="flex items-center justify-end">
+          <Button
+            onClick={handleSendSnippet}
+            disabled={isLoading}
+            size="sm"
+            className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-x-1.5"
+          >
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                <Save className="w-3.5 h-3.5" />
+                <span>Save Snippet</span>
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>

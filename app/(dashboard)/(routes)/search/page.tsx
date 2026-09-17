@@ -1,51 +1,51 @@
-import CardComponent from "../../_components/card";
-import AssistantForm from "../teacher/courses/[courseId]/chapters/[chapterId]/_components/assistant-form";
-import testimage from "../../../../public/Rectangle81.jpg";
-import { Categories } from "./_components/categories";
-import { CourseCard } from "@/app/components/course-card";
-import { db } from "../../../../lib/db";
-import { getCourses } from "@/actions/get-courses";
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/authOptions";
-import { CoursesList } from "../../../components/courses-list";
-import type { User } from "next-auth";
-import bgDashboard from "../../../../public/bg-dashboard.jpg";
-import Image from "next/image";
 
-type Props = {
-  user: User;
-  pagetype: string;
-};
+import { db } from "@/lib/db";
+import { getCourses } from "@/actions/get-courses";
+import { authOptions } from "@/app/api/auth/authOptions";
+import { CoursesList } from "@/app/components/courses-list";
+import { Categories } from "./_components/categories";
 
 interface SearchPageProps {
   searchParams: {
-    title: string;
-    categoryId: string;
+    title?: string;
+    categoryId?: string;
   };
 }
 
 const SearchPage = async ({ searchParams }: SearchPageProps) => {
-  const categories = await db.category.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
-
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id ?? "";
 
-  const courses = await getCourses({
-    userId,
-    ...searchParams,
-  });
+  const [categories, courses] = await Promise.all([
+    db.category.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    }),
+    getCourses({
+      userId,
+      ...searchParams,
+    }),
+  ]);
 
   return (
-    <div className="p-6 bg-white min-h-full border rounded-md overflow-y-auto">
-      <div>
-        <h1 className="mb-5 mt-10 text-2xl font-bold text-black flex justify-center">
-          Explore new courses
-        </h1>
+    <div className="p-6 bg-white border border-gray-200 rounded-xl min-h-full space-y-6 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Explore Courses
+          </h1>
+          <p className="text-xs text-gray-500 mt-1">
+            Discover technology, web development, and database courses
+          </p>
+        </div>
+      </div>
+      <div className="space-y-4">
         <Categories items={categories} />
+      </div>
+      <div className="pt-2">
         <CoursesList items={courses} displayMode="search" />
       </div>
     </div>

@@ -1,5 +1,5 @@
 // components/BannerController.tsx
-"use client"; // Позначаємо компонент клієнтським
+"use client";  
 
 import { useState, useEffect } from "react";
 import { Banner } from "@/components/banner";

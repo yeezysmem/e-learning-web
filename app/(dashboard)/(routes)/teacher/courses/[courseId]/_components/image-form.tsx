@@ -2,19 +2,15 @@
 
 import * as z from "zod";
 import axios from "axios";
- 
-import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
+import { ImageIcon, Pencil, PlusCircle, ArrowDownToLine } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Course } from "@prisma/client";
 import Image from "next/image";
+
 import { FileUpload } from "@/components/file-upload";
-import { ChevronDown } from "lucide-react";
-import { ArrowDownToLine } from "lucide-react";
- 
 import { Button } from "@/components/ui/button";
- 
 
 interface ImageFormProps {
   initialData: Course;
@@ -31,62 +27,87 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
-
   const router = useRouter();
-
- 
-
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course updated");
+      toast.success("Course image updated");
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Failed to update image");
     }
   };
 
   return (
-    <div className="mt-6 border bg-white rounded-md p-4">
-      <div className="font-medium flex items-center justify-between mb-3">
-        <span className="font-bold">Course image</span>
-        <Button onClick={toggleEdit} variant="ghost">
-          {isEditing && <>Cancel</>}
+    <div className="mt-6 border border-gray-200 bg-white rounded-xl p-5 shadow-sm space-y-3">
+      {/* Header */}
+      <div className="font-bold flex items-center justify-between text-gray-900 text-sm">
+        <div className="flex items-center gap-x-2">
+          <ImageIcon className="w-4 h-4 text-purple-600" />
+          <span>Course Image</span>
+        </div>
+
+        <Button
+          onClick={toggleEdit}
+          variant="ghost"
+          size="sm"
+          className="text-xs font-semibold hover:bg-gray-100 rounded-lg"
+        >
+          {isEditing && "Cancel"}
           {!isEditing && !initialData.imageUrl && (
             <>
-              <PlusCircle className="h-4 w-4 mr-2" />
-              Add
+              <PlusCircle className="h-4 w-4 mr-1.5" />
+              Add Image
             </>
           )}
           {!isEditing && initialData.imageUrl && (
             <>
-              <Pencil size={16} />
-              <span className="ml-2">Add a file</span>
+              <Pencil className="h-3.5 w-3.5 mr-1.5" />
+              Edit Image
             </>
           )}
         </Button>
       </div>
-      {!isEditing && (!initialData.imageUrl ?(
-        <div className="flex items-center justify-center h-60 bg-[#D7D7ED] rounded-md">
-          <ArrowDownToLine className="h-12 w-12 text-black" />
-        </div>
-      ) : (
-        <div className="relative aspect-video mt-2">
-         <Image alt="Upload" fill sizes="(max-width: 768px)" priority={true} className="object-cover rounded-md" src={initialData.imageUrl} />
-        </div>
-      )
-      )}
-      {isEditing && (
-        <div>
-          <FileUpload endpoint="courseImage" onChange={(url) => {
-            if (url) {
-              onSubmit({ imageUrl: url });
-            }
-          }} />
-          <div className="text-xs text-muted-foreground mt-4"> 16:9 aspect ratio recomended </div>
+
+      {/* Preview or Placeholder */}
+      {!isEditing &&
+        (!initialData.imageUrl ? (
+          <div className="flex flex-col items-center justify-center h-48 bg-purple-50/50 border border-dashed border-purple-200 rounded-lg space-y-2">
+            <ArrowDownToLine className="h-8 w-8 text-purple-400" />
+            <span className="text-xs text-gray-500 font-medium">
+              No cover image uploaded
+            </span>
           </div>
+        ) : (
+          <div className="relative aspect-video mt-2 overflow-hidden rounded-lg border border-gray-200">
+            <Image
+              alt="Course cover"
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+              src={initialData.imageUrl}
+            />
+          </div>
+        ))}
+
+      {/* Edit / Upload Zone */}
+      {isEditing && (
+        <div className="space-y-2 pt-2">
+          <FileUpload
+            endpoint="courseImage"
+            onChange={(url) => {
+              if (url) {
+                onSubmit({ imageUrl: url });
+              }
+            }}
+          />
+          <p className="text-[11px] text-gray-400 italic">
+            16:9 aspect ratio recommended for best display on course cards.
+          </p>
+        </div>
       )}
     </div>
   );

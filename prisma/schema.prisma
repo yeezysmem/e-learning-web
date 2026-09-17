@@ -8,7 +8,7 @@ generator dbml {
 }
 
 datasource db {
-  provider     = "cockroachdb"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
